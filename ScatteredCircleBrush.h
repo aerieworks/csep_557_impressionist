@@ -1,7 +1,6 @@
-#include "Scattered.h"
-
 #pragma once
 #include "CircleBrush.h"
+#include "Scattered.h"
 class ScatteredCircleBrush :
 	public CircleBrush, Scattered
 {
