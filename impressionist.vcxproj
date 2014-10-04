@@ -153,7 +153,9 @@
     <ClCompile Include="originalView.cpp" />
     <ClCompile Include="paintView.cpp" />
     <ClCompile Include="pointBrush.cpp" />
+    <ClCompile Include="Scattered.cpp" />
     <ClCompile Include="ScatteredCircleBrush.cpp" />
+    <ClCompile Include="ScatteredLineBrush.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="brushes.h" />
@@ -169,7 +171,9 @@
     <ClInclude Include="originalView.h" />
     <ClInclude Include="paintView.h" />
     <ClInclude Include="pointBrush.h" />
+    <ClInclude Include="Scattered.h" />
     <ClInclude Include="ScatteredCircleBrush.h" />
+    <ClInclude Include="ScatteredLineBrush.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
