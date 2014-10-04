@@ -4,6 +4,7 @@
 #include "CircleBrush.h"
 
 #define PI 3.1415926535897932384626433832795
+#define CIRCLE_SEGMENT_FACTOR 0.01
 
 CircleBrush::CircleBrush(ImpressionistDoc *pDoc, char *name) :
 	ImpBrush(pDoc, name)
@@ -22,7 +23,7 @@ void CircleBrush::BrushMove(const Point source, const Point target)
 	ImpressionistDoc* pDoc = GetDocument();
 	double radius = pDoc->getSize() / 2;
 
-	double vertexCount = 2 * radius * PI / 0.01;
+	double vertexCount = 2 * radius * PI / CIRCLE_SEGMENT_FACTOR;
 
 	glBegin(GL_POLYGON);
 		SetColor(source);
