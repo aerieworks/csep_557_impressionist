@@ -2,14 +2,14 @@
 #include "LineBrush.h"
 
 
-LineBrush::LineBrush(ImpressionistDoc *pDoc, char *name) :
+LineBrush::LineBrush(ImpressionistDoc * pDoc, char * name) :
 ImpBrush(pDoc, name)
 {
 }
 
 void LineBrush::BrushBegin(const Point source, const Point target)
 {
-
+	BrushMove(source, target);
 }
 
 void LineBrush::BrushMove(const Point source, const Point target)

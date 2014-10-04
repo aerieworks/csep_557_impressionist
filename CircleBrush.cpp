@@ -5,7 +5,7 @@
 #define PI 3.1415926535897932384626433832795
 #define CIRCLE_SEGMENT_FACTOR 0.01
 
-CircleBrush::CircleBrush(ImpressionistDoc *pDoc, char *name) :
+CircleBrush::CircleBrush(ImpressionistDoc * pDoc, char * name) :
 	ImpBrush(pDoc, name)
 {
 }
