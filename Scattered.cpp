@@ -11,12 +11,14 @@ Scattered::Scattered()
 	srand(time(0));
 }
 
-double Scattered::getRandomOffset()
+int Scattered::AddRandomOffset(const int initialValue) const
 {
-	return OFFSET_MIN + (OFFSET_MAX - OFFSET_MIN) * ((double)rand()) / ((double)RAND_MAX);
+	const double offsetPercentage = (double)rand() / (double)RAND_MAX;
+	const int offsetValue = (int)floor((OFFSET_MAX - OFFSET_MIN) * offsetPercentage);
+	return initialValue + OFFSET_MIN + offsetValue;
 }
 
-Point Scattered::getScatteredTarget(const Point originalTarget)
+Point Scattered::GetScatteredTarget(const Point originalTarget) const
 {
-	return Point(originalTarget.x + getRandomOffset(), originalTarget.y + getRandomOffset());
+	return Point(AddRandomOffset(originalTarget.x), AddRandomOffset(originalTarget.y));
 }

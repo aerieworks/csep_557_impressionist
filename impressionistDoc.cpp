@@ -87,14 +87,6 @@ void ImpressionistDoc::setBrushType(int type)
 }
 
 //---------------------------------------------------------
-// Returns the size of the brush.
-//---------------------------------------------------------
-int ImpressionistDoc::getSize()
-{
-	return m_pUI->getSize();
-}
-
-//---------------------------------------------------------
 // Load the specified image
 // This is called by the UI when the load image button is 
 // pressed.

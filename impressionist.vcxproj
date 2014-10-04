@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="viewModels\BrushSettings.cpp" />
     <ClCompile Include="CircleBrush.cpp" />
     <ClCompile Include="FltDesignUI.cpp" />
     <ClCompile Include="imageio.cpp" />
@@ -160,6 +161,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="brushes.h" />
+    <ClInclude Include="viewModels\BrushSettings.h" />
     <ClInclude Include="CircleBrush.h" />
     <ClInclude Include="dialog.h" />
     <ClInclude Include="FltDesignUI.h" />

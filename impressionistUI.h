@@ -57,11 +57,6 @@ public:
 	void				show();
 	void				resize_windows(int w, int h);
 
-	// Interface to get attribute
-
-	int					getSize();
-	void				setSize(int size);
-
 	// Callbacks for the image filter dialogue (different from
 	// the other callbacks because they aren't static)
 	void				initFltDesignUI(void);
@@ -73,10 +68,10 @@ public:
 
 
 private:
-	ImpressionistDoc*	m_pDoc;		// pointer to document to communicate with the document
+	BrushSettings* GetCurrentBrushSettings();
+	void UpdateBrushControls();
 
-	// All attributes here
-	int		m_nSize;
+	ImpressionistDoc*	m_pDoc;		// pointer to document to communicate with the document
 
 	// These attributes are set by the filter kernel UI
 	double fltKernel[FLT_WIDTH*FLT_HEIGHT];		//the kernel of the image filter
@@ -90,6 +85,7 @@ private:
 	static Fl_Menu_Item		brushTypeMenu[NUM_BRUSH_TYPE+1];
 
 	static ImpressionistUI*	whoami(Fl_Menu_* o);
+	static ImpressionistUI* whoami(Fl_Widget* o);
 
 	// All callbacks here.  Callbacks are declared 
 	// static

@@ -8,6 +8,7 @@
 //
 
 #include <stdlib.h>
+#include "viewModels/BrushSettings.h"
 
 // Each brush type has an associated constant.
 enum
@@ -53,6 +54,8 @@ public:
 	// Return the name of the brush (not used in this version).
 	char* BrushName( void );
 	
+	BrushSettings* GetSettings();
+	
 	static int			c_nBrushCount;	// How many brushes we have,
 	static ImpBrush**	c_pBrushes;		// and what they are.
 
@@ -61,6 +64,7 @@ private:
 
 	// Brush's name (not used in this version).
 	char*				m_pBrushName;
+	BrushSettings		m_settings;
 };
 
 #endif

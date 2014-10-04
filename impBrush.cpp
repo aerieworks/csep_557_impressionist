@@ -15,8 +15,10 @@ ImpBrush**	ImpBrush::c_pBrushes	= NULL;
 ImpBrush::ImpBrush(ImpressionistDoc*	pDoc, 
 				   char*				name) :
 					m_pDoc(pDoc), 
-					m_pBrushName(name)
+					m_pBrushName(name),
+					m_settings()
 {
+
 }
 
 //---------------------------------------------------
@@ -33,6 +35,14 @@ ImpressionistDoc* ImpBrush::GetDocument(void)
 char* ImpBrush::BrushName(void)
 {
 	return m_pBrushName;
+}
+
+//----------------------------------------------------
+// Return the settings object for the brush
+//----------------------------------------------------
+BrushSettings* ImpBrush::GetSettings()
+{
+	return &m_settings;
 }
 
 //----------------------------------------------------

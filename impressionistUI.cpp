@@ -171,6 +171,31 @@ ImpressionistUI* ImpressionistUI::whoami(Fl_Menu_* o)
 	return ( (ImpressionistUI*)(o->parent()->user_data()) );
 }
 
+//------------------------------------------------------------
+// This returns the UI, given the menu item.  It is a
+// convenience method for use in FLTK callbacks.
+//------------------------------------------------------------
+ImpressionistUI* ImpressionistUI::whoami(Fl_Widget* o)
+{
+	return (ImpressionistUI*)(o->user_data());
+}
+
+//------------------------------------------------------------
+// Returns the settings for the currently selected brush.
+//------------------------------------------------------------
+BrushSettings* ImpressionistUI::GetCurrentBrushSettings()
+{
+	return getDocument()->m_pCurrentBrush->GetSettings();
+}
+
+//------------------------------------------------------------
+// Updates brush setting controls based on the currently
+// selected brush.
+//------------------------------------------------------------
+void ImpressionistUI::UpdateBrushControls()
+{
+	this->m_BrushSizeSlider->value(this->GetCurrentBrushSettings()->GetSizeAsDouble());
+}
 
 //--------------------------------- Callback Functions --------------------------------------------
 
@@ -300,13 +325,14 @@ void ImpressionistUI::cb_about(Fl_Menu_* o, void* v)
 //-------------------------------------------------------------
 void ImpressionistUI::cb_brushChoice(Fl_Widget* o, void* v)
 {
-	ImpressionistUI* pUI=((ImpressionistUI *)(o->user_data()));
+	ImpressionistUI* pUI = whoami(o);
 	ImpressionistDoc* pDoc=pUI->getDocument();
 
 	int type=(int)v;
 
 
 	pDoc->setBrushType(type);
+	pUI->UpdateBrushControls();
 }
 
 //------------------------------------------------------------
@@ -328,7 +354,8 @@ void ImpressionistUI::cb_clear_canvas_button(Fl_Widget* o, void* v)
 //-----------------------------------------------------------
 void ImpressionistUI::cb_sizeSlides(Fl_Widget* o, void* v)
 {
-	((ImpressionistUI*)(o->user_data()))->m_nSize=int( ((Fl_Slider *)o)->value() ) ;
+	const int newSize = int(((Fl_Slider*)o)->value());
+	whoami(o)->GetCurrentBrushSettings()->SetSize(newSize);
 }
 
 //---------------------------------- per instance functions --------------------------------------
@@ -369,25 +396,8 @@ void ImpressionistUI::setDocument(ImpressionistDoc* doc)
 
 	m_origView->m_pDoc = doc;
 	m_paintView->m_pDoc = doc;
-}
-
-//------------------------------------------------
-// Return the brush size
-//------------------------------------------------
-int ImpressionistUI::getSize()
-{
-	return m_nSize;
-}
-
-//-------------------------------------------------
-// Set the brush size
-//-------------------------------------------------
-void ImpressionistUI::setSize( int size )
-{
-	m_nSize=size;
-
-	if (size<=40) 
-		m_BrushSizeSlider->value(m_nSize);
+	doc->setUI(this);
+	this->UpdateBrushControls();
 }
 
 // Getting/setting methods for the filter design UI
@@ -536,10 +546,6 @@ ImpressionistUI::ImpressionistUI() {
 
 	initFltDesignUI();
 
-	// init values
-
-	m_nSize = 10;
-
 	// brush dialog definition
 	m_brushDialog = new Fl_Window(400, 325, "Brush Dialog");
 		// Add a brush type choice to the dialog
@@ -562,7 +568,7 @@ ImpressionistUI::ImpressionistUI() {
 		m_BrushSizeSlider->minimum(1);
 		m_BrushSizeSlider->maximum(40);
 		m_BrushSizeSlider->step(1);
-		m_BrushSizeSlider->value(m_nSize);
+		m_BrushSizeSlider->value(0);
 		m_BrushSizeSlider->align(FL_ALIGN_RIGHT);
 		m_BrushSizeSlider->callback(cb_sizeSlides);
 

@@ -10,6 +10,6 @@ ScatteredPointBrush::ScatteredPointBrush(ImpressionistDoc * pDoc, char * name) :
 
 void ScatteredPointBrush::BrushMove(const Point source, const Point target)
 {
-	Point scatteredTarget = Scattered::getScatteredTarget(target);
+	Point scatteredTarget = Scattered::GetScatteredTarget(target);
 	PointBrush::BrushMove(source, scatteredTarget);
 }

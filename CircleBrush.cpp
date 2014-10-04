@@ -19,8 +19,7 @@ void CircleBrush::BrushBegin(const Point source, const Point target)
 
 void CircleBrush::BrushMove(const Point source, const Point target)
 {
-	ImpressionistDoc* pDoc = GetDocument();
-	double radius = pDoc->getSize() / 2;
+	double radius = GetSettings()->GetSizeAsDouble() / 2;
 
 	double vertexCount = 2 * radius * PI / CIRCLE_SEGMENT_FACTOR;
 

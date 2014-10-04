@@ -14,8 +14,7 @@ void LineBrush::BrushBegin(const Point source, const Point target)
 
 void LineBrush::BrushMove(const Point source, const Point target)
 {
-	ImpressionistDoc *pDoc = GetDocument();
-	int lineLength = pDoc->getSize();
+	int lineLength = GetSettings()->GetSizeAsInteger();
 
 	glBegin(GL_LINES);
 		SetColor(source);
