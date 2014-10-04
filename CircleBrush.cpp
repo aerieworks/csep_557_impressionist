@@ -13,7 +13,7 @@ CircleBrush::CircleBrush(ImpressionistDoc *pDoc, char *name) :
 
 void CircleBrush::BrushBegin(const Point source, const Point target)
 {
-	glPolygonMode(GL_FRONT, GLU_FILL);
+	glPolygonMode(GL_FRONT, GL_FILL);
 	BrushMove(source, target);
 }
 
