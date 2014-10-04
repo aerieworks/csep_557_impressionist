@@ -233,10 +233,13 @@ void ImpressionistDoc::applyFilter( const unsigned char* sourceBuffer,
 				for (int knlRow = 0; knlRow < knlHeight; knlRow++)
 				{
 					// Calculate the source row to look at, given this position in the kernel.
-					const int sourceRow = max(0, min(srcBufferHeight - 1, destRow + knlRowOffset + knlRow));
+					// Note that the kernel offset is subtracted, to account for OpenGL storing images upside down.
+					// So the (-2, -2) offset becomes effectively (-2, 2).
+					const int sourceRow = max(0, min(srcBufferHeight - 1, destRow - (knlRowOffset + knlRow)));
 					for (int knlCol = 0; knlCol < knlWidth; knlCol++)
 					{
 						// Calculate the destination row to look at, given this position in the kernel.
+						// The kernel offset is added for columns, since the image is stored normally on the X axis.
 						const int sourceCol = max(0, min(srcBufferWidth - 1, destCol + knlColOffset + knlCol));
 						const unsigned char sourceValue = sourceBuffer[3 * (sourceRow * srcBufferWidth + sourceCol) + color];
 						const double knlValue = filterKernel[knlRow * knlWidth + knlCol];
