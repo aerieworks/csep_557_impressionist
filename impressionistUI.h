@@ -49,6 +49,7 @@ public:
 
 	Fl_Slider*			m_BrushSizeSlider;
 	Fl_Slider*			m_BrushOpacitySlider;
+	Fl_Slider*			m_BrushLineWidthSlider;
 	Fl_Button*          m_ClearCanvasButton;
 
 	// Member functions
@@ -101,7 +102,7 @@ private:
 	static void	cb_clear_canvas_button(Fl_Widget* o, void* v);
 	static void	cb_sizeSlides(Fl_Widget* o, void* v);
 	static void cb_opacitySlides(Fl_Widget* o, void* v);
-
+	static void cb_lineWidthSlides(Fl_Widget* o, void* v);
 };
 
 #endif

@@ -9,6 +9,7 @@ ImpBrush(pDoc, name)
 
 void LineBrush::BrushBegin(const Point source, const Point target)
 {
+	glLineWidth(GetSettings()->GetLineWidthAsFloat());
 	BrushMove(source, target);
 }
 

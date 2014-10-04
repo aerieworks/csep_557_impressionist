@@ -246,7 +246,16 @@ void ImpressionistUI::cb_save_image(Fl_Menu_* o, void* v)
 //-------------------------------------------------------------
 void ImpressionistUI::cb_brushes(Fl_Menu_* o, void* v) 
 {
-	whoami(o)->m_brushDialog->show();
+	ImpressionistUI* self = whoami(o);
+	GLfloat lineWidthRange[2];
+	glGetFloatv(GL_LINE_WIDTH_RANGE, lineWidthRange);
+	self->m_BrushLineWidthSlider->minimum(max(1, lineWidthRange[0]));
+	self->m_BrushLineWidthSlider->maximum(lineWidthRange[1]);
+	GLfloat lineWidthGranularity[1];
+	glGetFloatv(GL_LINE_WIDTH_GRANULARITY, lineWidthGranularity);
+	self->m_BrushLineWidthSlider->step(lineWidthGranularity[0]);
+
+	self->m_brushDialog->show();
 }
 
 void ImpressionistUI::cb_filter_kernel(Fl_Menu_* o, void* v) 
@@ -331,14 +340,14 @@ void ImpressionistUI::cb_clear_canvas_button(Fl_Widget* o, void* v)
 
 
 //-----------------------------------------------------------
-// Updates the brush size to use from the value of the size
-// slider
-// Called by the UI when the size slider is moved
+// Updates the brush line width to use from the value of the
+// line width slider.
+// Called by the UI when the line width slider is moved
 //-----------------------------------------------------------
-void ImpressionistUI::cb_sizeSlides(Fl_Widget* o, void* v)
+void ImpressionistUI::cb_lineWidthSlides(Fl_Widget* o, void* v)
 {
-	const int newSize = int(((Fl_Slider*)o)->value());
-	whoami(o)->GetCurrentBrushSettings()->SetSize(newSize);
+	const int newLineWidth = int(((Fl_Slider*)o)->value());
+	whoami(o)->GetCurrentBrushSettings()->SetLineWidth(newLineWidth);
 }
 
 //-----------------------------------------------------------
@@ -350,6 +359,17 @@ void ImpressionistUI::cb_opacitySlides(Fl_Widget* o, void* v)
 {
 	const int newOpacity = int(((Fl_Slider*)o)->value());
 	whoami(o)->GetCurrentBrushSettings()->SetOpacity(newOpacity);
+}
+
+//-----------------------------------------------------------
+// Updates the brush size to use from the value of the size
+// slider
+// Called by the UI when the size slider is moved
+//-----------------------------------------------------------
+void ImpressionistUI::cb_sizeSlides(Fl_Widget* o, void* v)
+{
+	const int newSize = int(((Fl_Slider*)o)->value());
+	whoami(o)->GetCurrentBrushSettings()->SetSize(newSize);
 }
 
 //---------------------------------- per instance functions --------------------------------------
@@ -579,6 +599,18 @@ ImpressionistUI::ImpressionistUI() {
 		m_BrushOpacitySlider->align(FL_ALIGN_RIGHT);
 		m_BrushOpacitySlider->callback(cb_opacitySlides);
 
+		// Add brush line width slider to the dialog
+		m_BrushLineWidthSlider = new Fl_Value_Slider(10, 160, 300, 20, "Line Width");
+		m_BrushLineWidthSlider->user_data((void*)this);
+		m_BrushLineWidthSlider->type(FL_HOR_NICE_SLIDER);
+		m_BrushLineWidthSlider->labelfont(FL_COURIER);
+		m_BrushLineWidthSlider->labelsize(12);
+		m_BrushLineWidthSlider->minimum(1);
+		m_BrushLineWidthSlider->maximum(3);
+		m_BrushLineWidthSlider->value(3);
+		m_BrushLineWidthSlider->align(FL_ALIGN_RIGHT);
+		m_BrushLineWidthSlider->callback(cb_lineWidthSlides);
+
     m_brushDialog->end();	
 
 }
@@ -628,6 +660,18 @@ BrushSettings* ImpressionistUI::GetCurrentBrushSettings()
 //------------------------------------------------------------
 void ImpressionistUI::UpdateBrushControls()
 {
-	this->m_BrushSizeSlider->value(this->GetCurrentBrushSettings()->GetSizeAsDouble());
-	this->m_BrushOpacitySlider->value(this->GetCurrentBrushSettings()->GetOpacityAsDouble());
+	m_BrushLineWidthSlider->value(GetCurrentBrushSettings()->GetLineWidthAsDouble());
+	m_BrushOpacitySlider->value(GetCurrentBrushSettings()->GetOpacityAsDouble());
+	m_BrushSizeSlider->value(GetCurrentBrushSettings()->GetSizeAsDouble());
+
+	const ImpBrush* currentBrush = getDocument()->m_pCurrentBrush;
+	if (currentBrush == ImpBrush::c_pBrushes[BRUSH_LINES]
+		|| currentBrush == ImpBrush::c_pBrushes[BRUSH_SCATTERED_LINES])
+	{
+		m_BrushLineWidthSlider->show();
+	}
+	else
+	{
+		m_BrushLineWidthSlider->hide();
+	}
 }
