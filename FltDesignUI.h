@@ -7,6 +7,7 @@
 #include <FL/Fl_Group.H>
 #include <FL/Fl_Value_Input.H>
 #include <FL/Fl_Button.H>
+#include <FL/Fl_Round_Button.H>
 
 class ImpressionistUI;
 
@@ -149,6 +150,11 @@ public:
 private:
   inline void cb_offset_i(Fl_Value_Input*, void*);
   static void cb_offset(Fl_Value_Input*, void*);
+public:
+  Fl_Group *applyTo;
+  Fl_Round_Button *applyToSource;
+  Fl_Round_Button *applyToPainting;
+private:
   inline void cb_Cancel_i(Fl_Button*, void*);
   static void cb_Cancel(Fl_Button*, void*);
   inline void cb_Apply_i(Fl_Button*, void*);

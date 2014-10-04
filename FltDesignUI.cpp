@@ -217,7 +217,7 @@ void FltDesignUI::cb_Preview(Fl_Button* o, void* v) {
 
 FltDesignUI::FltDesignUI() {
   Fl_Window* w;
-  { Fl_Window* o = mainWindow = new Fl_Window(286, 320, "Filter Design UI");
+  { Fl_Window* o = mainWindow = new Fl_Window(286, 370, "Filter Design UI");
     w = o;
     o->user_data((void*)(this));
     { Fl_Group* o = kernel = new Fl_Group(0, 20, 272, 140, "Filter Kernel");
@@ -335,13 +335,25 @@ FltDesignUI::FltDesignUI() {
       o->maximum(255);
       o->callback((Fl_Callback*)cb_offset);
     }
-    { Fl_Button* o = new Fl_Button(152, 280, 124, 24, "Cancel");
+	{ Fl_Group* o = applyTo = new Fl_Group(0, 244, 272, 37, "Apply To:");
+      o->box(FL_ENGRAVED_FRAME);
+	  o->when(FL_WHEN_CHANGED);
+	  { Fl_Round_Button* o = applyToPainting = new Fl_Round_Button(30, 250, 75, 25, "Painting");
+	    o->type(FL_RADIO_BUTTON);
+	    o->setonly();
+	  }
+	  { Fl_Round_Button* o = applyToSource = new Fl_Round_Button(130, 250, 75, 25, "Source");
+	    o->type(FL_RADIO_BUTTON);
+	  }
+	  o->end();
+	}
+    { Fl_Button* o = new Fl_Button(152, 321, 124, 24, "Cancel");
       o->callback((Fl_Callback*)cb_Cancel);
     }
-    { Fl_Button* o = new Fl_Button(8, 280, 128, 24, "Apply");
+    { Fl_Button* o = new Fl_Button(8, 321, 128, 24, "Apply");
       o->callback((Fl_Callback*)cb_Apply);
     }
-    { Fl_Button* o = new Fl_Button(8, 244, 268, 24, "Preview");
+    { Fl_Button* o = new Fl_Button(8, 291, 268, 24, "Preview");
       o->callback((Fl_Callback*)cb_Preview);
     }
     o->set_modal();

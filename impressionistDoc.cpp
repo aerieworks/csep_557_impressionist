@@ -241,7 +241,18 @@ void ImpressionistDoc::applyFilter( const unsigned char* sourceBuffer,
 						// Calculate the destination row to look at, given this position in the kernel.
 						// The kernel offset is added for columns, since the image is stored normally on the X axis.
 						const int sourceCol = max(0, min(srcBufferWidth - 1, destCol + knlColOffset + knlCol));
-						const unsigned char sourceValue = sourceBuffer[3 * (sourceRow * srcBufferWidth + sourceCol) + color];
+						unsigned char sourceValue;
+						if (m_pUI->fltDesignUI->applyToPainting->value() == 1)
+						{
+							// If applying to the painting, get the source value from the preview buffer.
+							sourceValue = sourceBuffer[3 * (sourceRow * srcBufferWidth + sourceCol) + color];
+						}
+						else
+						{
+							// If applying to the source image, get the source value from the source image.
+							sourceValue = GetOriginalPixel(sourceCol, sourceRow)[color];
+						}
+
 						const double knlValue = filterKernel[knlRow * knlWidth + knlCol];
 						// Apply the kernel value to the source value and add it to the cumulative value.
 						combinedValue += sourceValue * knlValue;
