@@ -7,6 +7,7 @@
 
 
 #include <FL/fl_ask.H>
+#include <iostream>
 
 #include <algorithm>
 
@@ -214,11 +215,53 @@ void ImpressionistDoc::applyFilter( const unsigned char* sourceBuffer,
 		int knlWidth, int knlHeight, 
 		double divisor, double offset )
 {
-	// This needs to be implemented for image filtering to work.
+	// Calculate the row and column offset for the (0, 0) kernel value (i.e. (-2, -2) for a 5x5 kernel).
+	// Note that this has an interesting effect if kernel dimensions are even: it would ignore the current pixel's row/column.
+	const int knlRowOffset = -floor(knlHeight / 2);
+	const int knlColOffset = -floor(knlWidth / 2);
+	for (int destRow = 0; destRow < srcBufferHeight; destRow++)
+	{
+		for (int destCol = 0; destCol < srcBufferWidth; destCol++)
+		{
+			// Calculate where in the destination buffer to write this pixel's value.
+			const int destPixelStart = 3 * (destRow * srcBufferWidth + destCol);
 
+			// We apply the filter to a pixel 3 times, once for each color channel.
+			for (int color = 0; color < 3; color++)
+			{
+				int combinedValue = 0;
+				for (int knlRow = 0; knlRow < knlHeight; knlRow++)
+				{
+					// Calculate the source row to look at, given this position in the kernel.
+					const int sourceRow = max(0, min(srcBufferHeight - 1, destRow + knlRowOffset + knlRow));
+					for (int knlCol = 0; knlCol < knlWidth; knlCol++)
+					{
+						// Calculate the destination row to look at, given this position in the kernel.
+						const int sourceCol = max(0, min(srcBufferWidth - 1, destCol + knlColOffset + knlCol));
+						const unsigned char sourceValue = sourceBuffer[3 * (sourceRow * srcBufferWidth + sourceCol) + color];
+						const double knlValue = filterKernel[knlRow * knlWidth + knlCol];
+						// Apply the kernel value to the source value and add it to the cumulative value.
+						combinedValue += sourceValue * knlValue;
+					}
+				}
 
+				// Adjust filter output and make sure it fits within the bounds of an RGB color value.
+				const double adjustedValue = (double)combinedValue / divisor + offset;
+				destBuffer[destPixelStart + color] = FitFilterOutput(adjustedValue);
+			}
+		}
+	}
 }
 
+//------------------------------------------------------------------
+// Fits the value output by a filter to the range allowed within an
+// image.  Values will be rounded and truncated to fit within the
+// inclusive range [0, 255].
+//------------------------------------------------------------------
+unsigned char ImpressionistDoc::FitFilterOutput(const double value) const
+{
+	return max(0, min(255, round(value)));
+}
 
 //------------------------------------------------------------------
 // Get the color of the pixel in the original image at coord x and y

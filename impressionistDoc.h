@@ -71,6 +71,7 @@ public:
 
 
 private:
+	unsigned char	FitFilterOutput(const double value) const;
 	char			m_imageName[256];
 
 };
