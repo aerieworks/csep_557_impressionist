@@ -1,6 +1,5 @@
 #include <math.h>
 #include "impressionistDoc.h"
-#include "impressionistUI.h"
 #include "CircleBrush.h"
 
 #define PI 3.1415926535897932384626433832795
