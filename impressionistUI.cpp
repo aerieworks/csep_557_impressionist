@@ -180,23 +180,6 @@ ImpressionistUI* ImpressionistUI::whoami(Fl_Widget* o)
 	return (ImpressionistUI*)(o->user_data());
 }
 
-//------------------------------------------------------------
-// Returns the settings for the currently selected brush.
-//------------------------------------------------------------
-BrushSettings* ImpressionistUI::GetCurrentBrushSettings()
-{
-	return getDocument()->m_pCurrentBrush->GetSettings();
-}
-
-//------------------------------------------------------------
-// Updates brush setting controls based on the currently
-// selected brush.
-//------------------------------------------------------------
-void ImpressionistUI::UpdateBrushControls()
-{
-	this->m_BrushSizeSlider->value(this->GetCurrentBrushSettings()->GetSizeAsDouble());
-}
-
 //--------------------------------- Callback Functions --------------------------------------------
 
 //------------------------------------------------------------------
@@ -356,6 +339,17 @@ void ImpressionistUI::cb_sizeSlides(Fl_Widget* o, void* v)
 {
 	const int newSize = int(((Fl_Slider*)o)->value());
 	whoami(o)->GetCurrentBrushSettings()->SetSize(newSize);
+}
+
+//-----------------------------------------------------------
+// Updates the brush opacity to use from the value of the
+// opacity slider.
+// Called by the UI when the opacity slider is moved
+//-----------------------------------------------------------
+void ImpressionistUI::cb_opacitySlides(Fl_Widget* o, void* v)
+{
+	const int newOpacity = int(((Fl_Slider*)o)->value());
+	whoami(o)->GetCurrentBrushSettings()->SetOpacity(newOpacity);
 }
 
 //---------------------------------- per instance functions --------------------------------------
@@ -572,6 +566,19 @@ ImpressionistUI::ImpressionistUI() {
 		m_BrushSizeSlider->align(FL_ALIGN_RIGHT);
 		m_BrushSizeSlider->callback(cb_sizeSlides);
 
+		// Add brush opacity slider to the dialog
+		m_BrushOpacitySlider = new Fl_Value_Slider(10, 120, 300, 20, "Opacity");
+		m_BrushOpacitySlider->user_data((void*)this);
+		m_BrushOpacitySlider->type(FL_HOR_NICE_SLIDER);
+		m_BrushOpacitySlider->labelfont(FL_COURIER);
+		m_BrushOpacitySlider->labelsize(12);
+		m_BrushOpacitySlider->minimum(0);
+		m_BrushOpacitySlider->maximum(255);
+		m_BrushOpacitySlider->step(1);
+		m_BrushOpacitySlider->value(255);
+		m_BrushOpacitySlider->align(FL_ALIGN_RIGHT);
+		m_BrushOpacitySlider->callback(cb_opacitySlides);
+
     m_brushDialog->end();	
 
 }
@@ -607,5 +614,20 @@ void ImpressionistUI::previewFilter(void)
 	m_paintView->refresh();
 }
 
+//------------------------------------------------------------
+// Returns the settings for the currently selected brush.
+//------------------------------------------------------------
+BrushSettings* ImpressionistUI::GetCurrentBrushSettings()
+{
+	return getDocument()->m_pCurrentBrush->GetSettings();
+}
 
-
+//------------------------------------------------------------
+// Updates brush setting controls based on the currently
+// selected brush.
+//------------------------------------------------------------
+void ImpressionistUI::UpdateBrushControls()
+{
+	this->m_BrushSizeSlider->value(this->GetCurrentBrushSettings()->GetSizeAsDouble());
+	this->m_BrushOpacitySlider->value(this->GetCurrentBrushSettings()->GetOpacityAsDouble());
+}

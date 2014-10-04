@@ -58,6 +58,10 @@ void PaintView::draw()
 
 		// We're only using 2-D, so turn off depth 
 		glDisable( GL_DEPTH_TEST );
+		
+		// Enable blending for opacity.
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		ortho();
 
