@@ -303,7 +303,7 @@ void ImpressionistUI::cb_brushChoice(Fl_Widget* o, void* v)
 	ImpressionistUI* pUI=((ImpressionistUI *)(o->user_data()));
 	ImpressionistDoc* pDoc=pUI->getDocument();
 
-	int type=*(int*)v;
+	int type=(int)v;
 
 
 	pDoc->setBrushType(type);
