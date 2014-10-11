@@ -357,6 +357,17 @@ void ImpressionistUI::cb_clear_canvas_button(Fl_Widget* o, void* v)
 
 
 //-----------------------------------------------------------
+// Updates the brush direction to use from the value of the
+// line width slider.
+// Called by the UI when the brush direction slider is moved
+//-----------------------------------------------------------
+void ImpressionistUI::cb_brushDirectionSlides(Fl_Widget* o, void* v)
+{
+	const double newDirection = ((Fl_Slider*)o)->value();
+	whoami(o)->GetCurrentBrushSettings()->SetBrushDirection(newDirection);
+}
+
+//-----------------------------------------------------------
 // Updates the brush line width to use from the value of the
 // line width slider.
 // Called by the UI when the line width slider is moved
@@ -635,6 +646,18 @@ ImpressionistUI::ImpressionistUI() {
 		m_BrushLineWidthSlider->align(FL_ALIGN_RIGHT);
 		m_BrushLineWidthSlider->callback(cb_lineWidthSlides);
 
+		// Add brush direction slider to the dialog
+		m_BrushDirectionSlider = new Fl_Value_Slider(10, 200, 300, 20, "Brush Direction");
+		m_BrushDirectionSlider->user_data((void*)this);
+		m_BrushDirectionSlider->type(FL_HOR_NICE_SLIDER);
+		m_BrushDirectionSlider->labelfont(FL_COURIER);
+		m_BrushDirectionSlider->labelsize(12);
+		m_BrushDirectionSlider->minimum(0);
+		m_BrushDirectionSlider->maximum(360);
+		m_BrushDirectionSlider->value(0);
+		m_BrushDirectionSlider->align(FL_ALIGN_RIGHT);
+		m_BrushDirectionSlider->callback(cb_brushDirectionSlides);
+
     m_brushDialog->end();	
 
 }
@@ -684,6 +707,7 @@ BrushSettings* ImpressionistUI::GetCurrentBrushSettings()
 //------------------------------------------------------------
 void ImpressionistUI::UpdateBrushControls()
 {
+	m_BrushDirectionSlider->value(GetCurrentBrushSettings()->GetBrushDirectionAsDouble());
 	m_BrushLineWidthSlider->value(GetCurrentBrushSettings()->GetLineWidthAsDouble());
 	m_BrushOpacitySlider->value(GetCurrentBrushSettings()->GetOpacityAsDouble());
 	m_BrushSizeSlider->value(GetCurrentBrushSettings()->GetSizeAsDouble());
@@ -692,10 +716,12 @@ void ImpressionistUI::UpdateBrushControls()
 	if (currentBrush == ImpBrush::c_pBrushes[BRUSH_LINES]
 		|| currentBrush == ImpBrush::c_pBrushes[BRUSH_SCATTERED_LINES])
 	{
+		m_BrushDirectionSlider->show();
 		m_BrushLineWidthSlider->show();
 	}
 	else
 	{
+		m_BrushDirectionSlider->hide();
 		m_BrushLineWidthSlider->hide();
 	}
 }

@@ -4,6 +4,7 @@ class BrushSettings
 	double lineWidth;
 	double opacity;
 	int size;
+	double brushDirection;
 
 public:
 	BrushSettings();
@@ -20,5 +21,8 @@ public:
 	double GetSizeAsDouble() const;
 	float GetSizeAsFloat() const;
 	void SetSize(const int size);
+
+	double GetBrushDirectionAsDouble() const;
+	void SetBrushDirection(const double brushDirection);
 };
 

@@ -3,11 +3,13 @@
 #define DEFAULT_LINE_WIDTH 1
 #define DEFAULT_OPACITY 255
 #define DEFAULT_SIZE 20
+#define DEFAULT_BRUSH_DIRECTION 0
 
 BrushSettings::BrushSettings()
 	: lineWidth(DEFAULT_LINE_WIDTH),
 	  opacity(DEFAULT_OPACITY),
-	  size(DEFAULT_SIZE)
+	  size(DEFAULT_SIZE),
+	  brushDirection(DEFAULT_BRUSH_DIRECTION)
 {
 }
 
@@ -59,4 +61,14 @@ float BrushSettings::GetSizeAsFloat() const
 void BrushSettings::SetSize(const int size)
 {
 	this->size = size;
+}
+
+double BrushSettings::GetBrushDirectionAsDouble() const
+{
+	return brushDirection;
+}
+
+void BrushSettings::SetBrushDirection(const double brushDirection)
+{
+	this->brushDirection = brushDirection;
 }
