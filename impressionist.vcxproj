@@ -212,6 +212,7 @@
     <ClCompile Include="actions\DrawPixelsAction.cpp" />
     <ClCompile Include="actions\BrushMoveAction.cpp" />
     <ClCompile Include="actions\BrushAction.cpp" />
+    <ClCompile Include="KernelFilter.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="UndoItem.cpp" />
     <ClCompile Include="viewModels\BrushSettings.cpp" />
@@ -240,6 +241,7 @@
     <ClInclude Include="brushes.h" />
     <ClInclude Include="actions\DrawPixelsAction.h" />
     <ClInclude Include="actions\BrushMoveAction.h" />
+    <ClInclude Include="KernelFilter.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="UndoItem.h" />
     <ClInclude Include="viewModels\BrushSettings.h" />

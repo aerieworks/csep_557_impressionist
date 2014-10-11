@@ -445,68 +445,66 @@ void ImpressionistUI::setDocument(ImpressionistDoc* doc)
 // Getting/setting methods for the filter design UI
 void ImpressionistUI::initFltDesignUI(void)
 {
-	fltDesignUI->ele0->value(fltKernel[0]);
-	fltDesignUI->ele1->value(fltKernel[1]);
-	fltDesignUI->ele2->value(fltKernel[2]);
-	fltDesignUI->ele3->value(fltKernel[3]);
-	fltDesignUI->ele4->value(fltKernel[4]);
-	fltDesignUI->ele5->value(fltKernel[5]);
-	fltDesignUI->ele6->value(fltKernel[6]);
-	fltDesignUI->ele7->value(fltKernel[7]);
-	fltDesignUI->ele8->value(fltKernel[8]);
-	fltDesignUI->ele9->value(fltKernel[9]);
-	fltDesignUI->ele10->value(fltKernel[10]);
-	fltDesignUI->ele11->value(fltKernel[11]);
-	fltDesignUI->ele12->value(fltKernel[12]);
-	fltDesignUI->ele13->value(fltKernel[13]);
-	fltDesignUI->ele14->value(fltKernel[14]);
-	fltDesignUI->ele15->value(fltKernel[15]);
-	fltDesignUI->ele16->value(fltKernel[16]);
-	fltDesignUI->ele17->value(fltKernel[17]);
-	fltDesignUI->ele18->value(fltKernel[18]);
-	fltDesignUI->ele19->value(fltKernel[19]);
-	fltDesignUI->ele20->value(fltKernel[20]);
-	fltDesignUI->ele21->value(fltKernel[21]);
-	fltDesignUI->ele22->value(fltKernel[22]);
-	fltDesignUI->ele23->value(fltKernel[23]);
-	fltDesignUI->ele24->value(fltKernel[24]);
+	fltDesignUI->ele0->value(filter.GetKernelValue(0, 0));
+	fltDesignUI->ele1->value(filter.GetKernelValue(0, 1));
+	fltDesignUI->ele2->value(filter.GetKernelValue(0, 2));
+	fltDesignUI->ele3->value(filter.GetKernelValue(0, 3));
+	fltDesignUI->ele4->value(filter.GetKernelValue(0, 4));
+	fltDesignUI->ele5->value(filter.GetKernelValue(1, 0));
+	fltDesignUI->ele6->value(filter.GetKernelValue(1, 1));
+	fltDesignUI->ele7->value(filter.GetKernelValue(1, 2));
+	fltDesignUI->ele8->value(filter.GetKernelValue(1, 3));
+	fltDesignUI->ele9->value(filter.GetKernelValue(1, 4));
+	fltDesignUI->ele10->value(filter.GetKernelValue(2, 0));
+	fltDesignUI->ele11->value(filter.GetKernelValue(2, 1));
+	fltDesignUI->ele12->value(filter.GetKernelValue(2, 2));
+	fltDesignUI->ele13->value(filter.GetKernelValue(2, 3));
+	fltDesignUI->ele14->value(filter.GetKernelValue(2, 4));
+	fltDesignUI->ele15->value(filter.GetKernelValue(3, 0));
+	fltDesignUI->ele16->value(filter.GetKernelValue(3, 1));
+	fltDesignUI->ele17->value(filter.GetKernelValue(3, 2));
+	fltDesignUI->ele18->value(filter.GetKernelValue(3, 3));
+	fltDesignUI->ele19->value(filter.GetKernelValue(3, 4));
+	fltDesignUI->ele20->value(filter.GetKernelValue(4, 0));
+	fltDesignUI->ele21->value(filter.GetKernelValue(4, 1));
+	fltDesignUI->ele22->value(filter.GetKernelValue(4, 2));
+	fltDesignUI->ele23->value(filter.GetKernelValue(4, 3));
+	fltDesignUI->ele24->value(filter.GetKernelValue(4, 4));
 
-	fltDesignUI->scale->value(scale);
-	fltDesignUI->offset->value(offset);
+	fltDesignUI->scale->value(filter.GetDivisor());
+	fltDesignUI->offset->value(filter.GetOffset());
 }
 
 void ImpressionistUI::updateFilter()
 {
-	fltKernel[0] = fltDesignUI->ele0->value();
-	fltKernel[1] = fltDesignUI->ele1->value();
-	fltKernel[2] = fltDesignUI->ele2->value();
-	fltKernel[3] = fltDesignUI->ele3->value();
-	fltKernel[4] = fltDesignUI->ele4->value();
-	fltKernel[5] = fltDesignUI->ele5->value();
-	fltKernel[6] = fltDesignUI->ele6->value();
-	fltKernel[7] = fltDesignUI->ele7->value();
-	fltKernel[8] = fltDesignUI->ele8->value();
-	fltKernel[9] = fltDesignUI->ele9->value();
-	fltKernel[10] = fltDesignUI->ele10->value();
-	fltKernel[11] = fltDesignUI->ele11->value();
-	fltKernel[12] = fltDesignUI->ele12->value();
-	fltKernel[13] = fltDesignUI->ele13->value();
-	fltKernel[14] = fltDesignUI->ele14->value();
-	fltKernel[15] = fltDesignUI->ele15->value();
-	fltKernel[16] = fltDesignUI->ele16->value();
-	fltKernel[17] = fltDesignUI->ele17->value();
-	fltKernel[18] = fltDesignUI->ele18->value();
-	fltKernel[19] = fltDesignUI->ele19->value();
-	fltKernel[20] = fltDesignUI->ele20->value();
-	fltKernel[21] = fltDesignUI->ele21->value();
-	fltKernel[22] = fltDesignUI->ele22->value();
-	fltKernel[23] = fltDesignUI->ele23->value();
-	fltKernel[24] = fltDesignUI->ele24->value();
+	filter.SetKernelValue(0, 0, fltDesignUI->ele0->value());
+	filter.SetKernelValue(0, 1, fltDesignUI->ele1->value());
+	filter.SetKernelValue(0, 2, fltDesignUI->ele2->value());
+	filter.SetKernelValue(0, 3, fltDesignUI->ele3->value());
+	filter.SetKernelValue(0, 4, fltDesignUI->ele4->value());
+	filter.SetKernelValue(1, 0, fltDesignUI->ele5->value());
+	filter.SetKernelValue(1, 1, fltDesignUI->ele6->value());
+	filter.SetKernelValue(1, 2, fltDesignUI->ele7->value());
+	filter.SetKernelValue(1, 3, fltDesignUI->ele8->value());
+	filter.SetKernelValue(1, 4, fltDesignUI->ele9->value());
+	filter.SetKernelValue(2, 0, fltDesignUI->ele10->value());
+	filter.SetKernelValue(2, 1, fltDesignUI->ele11->value());
+	filter.SetKernelValue(2, 2, fltDesignUI->ele12->value());
+	filter.SetKernelValue(2, 3, fltDesignUI->ele13->value());
+	filter.SetKernelValue(2, 4, fltDesignUI->ele14->value());
+	filter.SetKernelValue(3, 0, fltDesignUI->ele15->value());
+	filter.SetKernelValue(3, 1, fltDesignUI->ele16->value());
+	filter.SetKernelValue(3, 2, fltDesignUI->ele17->value());
+	filter.SetKernelValue(3, 3, fltDesignUI->ele18->value());
+	filter.SetKernelValue(3, 4, fltDesignUI->ele19->value());
+	filter.SetKernelValue(4, 0, fltDesignUI->ele20->value());
+	filter.SetKernelValue(4, 1, fltDesignUI->ele21->value());
+	filter.SetKernelValue(4, 2, fltDesignUI->ele22->value());
+	filter.SetKernelValue(4, 3, fltDesignUI->ele23->value());
+	filter.SetKernelValue(4, 4, fltDesignUI->ele24->value());
 
-	scale = fltDesignUI->scale->value();
-	offset = fltDesignUI->offset->value();
-
-//	printf("update filter\n");
+	filter.SetDivisor(fltDesignUI->scale->value());
+	filter.SetOffset(fltDesignUI->offset->value());
 }
 
 
@@ -553,7 +551,9 @@ Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE+1] = {
 // Constructor.  Creates all of the widgets.
 // Add new widgets here
 //----------------------------------------------------
-ImpressionistUI::ImpressionistUI() {
+ImpressionistUI::ImpressionistUI() 
+	: filter(FLT_WIDTH, FLT_HEIGHT)
+{
 	// Create the main window
 	m_mainWindow = new Fl_Window(600, 300, "Impressionist");
 		m_mainWindow->user_data((void*)(this));	// record self to be used by static callback functions
@@ -583,15 +583,6 @@ ImpressionistUI::ImpressionistUI() {
 	// Create the filter kernel UI
 	fltDesignUI = new FltDesignUI;
 	fltDesignUI->impUI = this;
-
-	// initialize the filter kernel
-	for (int i=0;i<FLT_HEIGHT*FLT_WIDTH;i++)
-	{
-		fltKernel[i] = 0;
-	}
-	fltKernel[(FLT_HEIGHT/2)*FLT_WIDTH+(FLT_HEIGHT/2)]=1;
-	scale = 1;
-	offset = 0;
 
 	initFltDesignUI();
 
@@ -676,20 +667,14 @@ void ImpressionistUI::cancelFilter(void)
 
 void ImpressionistUI::applyFilter(void)
 {
-	m_pDoc->applyFilter(m_pDoc->m_ucPreviewBackup, 
-		m_pDoc->m_nPaintWidth, m_pDoc->m_nPaintHeight,
-		m_pDoc->m_ucPainting, 
-		fltKernel,FLT_WIDTH,FLT_HEIGHT,scale,offset);
+	m_pDoc->applyFilter(filter, fltDesignUI->applyToPainting->value() == 1);
 	fltDesignUI->hide();
 	m_paintView->refresh();
 }
 
 void ImpressionistUI::previewFilter(void)
 {
-	m_pDoc->applyFilter(m_pDoc->m_ucPreviewBackup, 
-		m_pDoc->m_nPaintWidth, m_pDoc->m_nPaintHeight,
-		m_pDoc->m_ucPainting, 
-		fltKernel,FLT_WIDTH,FLT_HEIGHT,scale,offset);
+	m_pDoc->applyFilter(filter, fltDesignUI->applyToPainting->value() == 1);
 	m_paintView->refresh();
 }
 

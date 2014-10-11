@@ -11,6 +11,7 @@
 
 #include "impressionist.h"
 #include "imageio.h"
+#include "KernelFilter.h"
 #include "UndoItem.h"
 
 class ImpressionistUI;
@@ -29,6 +30,7 @@ public:
 
 	int     clearCanvas();                  // called by the UI to clear the drawing canvas
 
+	void applyFilter(const KernelFilter& filter, const bool applyToPainting);
 	void applyFilter( const unsigned char* sourceBuffer, //The filter kernel
 		int srcBufferWidth, int srcBufferHeight,
 		unsigned char* destBuffer,

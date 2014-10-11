@@ -23,6 +23,7 @@
 #include "FltDesignUI.h"
 
 #include "impBrush.h"
+#include "KernelFilter.h"
 
 const int FLT_WIDTH = 5;
 const int FLT_HEIGHT = 5;
@@ -79,12 +80,7 @@ private:
 
 	ImpressionistDoc*	m_pDoc;		// pointer to document to communicate with the document
 
-	// These attributes are set by the filter kernel UI
-	double fltKernel[FLT_WIDTH*FLT_HEIGHT];		//the kernel of the image filter
-	double scale,offset;						//the divisor and offset parameter, 
-												//applied after convolving to transform 
-												//the filtered image into the range [0,255]
-
+	KernelFilter filter;
 
 	// Static class members
 	static Fl_Menu_Item		menuitems[];

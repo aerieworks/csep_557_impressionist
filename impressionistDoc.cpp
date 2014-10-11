@@ -190,97 +190,21 @@ int ImpressionistDoc::clearCanvas()
 
 // This is called from the UI when the
 // "preview" or "apply" button is pressed in the filter dialog.
-
-
-
-/*
- *	INPUT: 
- *		sourceBuffer:		the original image buffer, 
- *		srcBufferWidth:		the width of the image buffer
- *		srcBufferHeight:	the height of the image buffer
- *							the buffer is arranged such that 
- *							origImg[3*(row*srcBufferWidth+column)+0], 
- *							origImg[3*(row*srcBufferWidth+column)+1], 
- *							origImg[3*(row*srcBufferWidth+column)+2]
- *							are R, G, B values for pixel at (column, row).
- *		destBuffer:			the image buffer to put the resulting
- *							image in.  It is always the same size
- *							as the source buffer.
- *
- *      filterKernel:		the 2D filter kernel,
- *		knlWidth:			the width of the kernel
- *		knlHeight:			the height of the kernel
- *
- *		divisor, offset:	each pixel after filtering should be
- *							divided by divisor and then added by offset
- */
-void ImpressionistDoc::applyFilter( const unsigned char* sourceBuffer,
-		int srcBufferWidth, int srcBufferHeight,
-		unsigned char* destBuffer,
-		const double *filterKernel, 
-		int knlWidth, int knlHeight, 
-		double divisor, double offset )
+void ImpressionistDoc::applyFilter(const KernelFilter& filter, const bool applyToPainting)
 {
-	// Calculate the row and column offset for the (0, 0) kernel value (i.e. (-2, -2) for a 5x5 kernel).
-	// Note that this has an interesting effect if kernel dimensions are even: it would ignore the current pixel's row/column.
-	const int knlRowOffset = -floor(knlHeight / 2);
-	const int knlColOffset = -floor(knlWidth / 2);
-	for (int destRow = 0; destRow < srcBufferHeight; destRow++)
+	const unsigned char* source;
+	if (applyToPainting)
 	{
-		for (int destCol = 0; destCol < srcBufferWidth; destCol++)
-		{
-			// Calculate where in the destination buffer to write this pixel's value.
-			const int destPixelStart = 3 * (destRow * srcBufferWidth + destCol);
-
-			// We apply the filter to a pixel 3 times, once for each color channel.
-			for (int color = 0; color < 3; color++)
-			{
-				int combinedValue = 0;
-				for (int knlRow = 0; knlRow < knlHeight; knlRow++)
-				{
-					// Calculate the source row to look at, given this position in the kernel.
-					// Note that the kernel offset is subtracted, to account for OpenGL storing images upside down.
-					// So the (-2, -2) offset becomes effectively (-2, 2).
-					const int sourceRow = max(0, min(srcBufferHeight - 1, destRow - (knlRowOffset + knlRow)));
-					for (int knlCol = 0; knlCol < knlWidth; knlCol++)
-					{
-						// Calculate the destination row to look at, given this position in the kernel.
-						// The kernel offset is added for columns, since the image is stored normally on the X axis.
-						const int sourceCol = max(0, min(srcBufferWidth - 1, destCol + knlColOffset + knlCol));
-						unsigned char sourceValue;
-						if (m_pUI->fltDesignUI->applyToPainting->value() == 1)
-						{
-							// If applying to the painting, get the source value from the preview buffer.
-							sourceValue = sourceBuffer[3 * (sourceRow * srcBufferWidth + sourceCol) + color];
-						}
-						else
-						{
-							// If applying to the source image, get the source value from the source image.
-							sourceValue = GetOriginalPixel(sourceCol, sourceRow)[color];
-						}
-
-						const double knlValue = filterKernel[knlRow * knlWidth + knlCol];
-						// Apply the kernel value to the source value and add it to the cumulative value.
-						combinedValue += sourceValue * knlValue;
-					}
-				}
-
-				// Adjust filter output and make sure it fits within the bounds of an RGB color value.
-				const double adjustedValue = (double)combinedValue / divisor + offset;
-				destBuffer[destPixelStart + color] = FitFilterOutput(adjustedValue);
-			}
-		}
+		// If applying to the painting, get the source value from the preview buffer.
+		source = m_ucPreviewBackup;
 	}
-}
+	else
+	{
+		// If applying to the source image, get the source value from the source image.
+		source = m_ucImage;
+	}
 
-//------------------------------------------------------------------
-// Fits the value output by a filter to the range allowed within an
-// image.  Values will be rounded and truncated to fit within the
-// inclusive range [0, 255].
-//------------------------------------------------------------------
-unsigned char ImpressionistDoc::FitFilterOutput(const double value) const
-{
-	return max(0, min(255, round(value)));
+	filter.Apply(source, m_ucPainting, m_nPaintWidth, m_nPaintHeight);
 }
 
 //------------------------------------------------------------------
