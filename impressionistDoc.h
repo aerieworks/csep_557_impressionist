@@ -57,6 +57,9 @@ public:
   // preview filters before applying.
   unsigned char*	m_ucPreviewBackup;
 
+  // Luminance of the original image.  Used to evaluate Sobel operator.
+  unsigned char* m_ucLuminance;
+
 
 
   // The current active brush.
@@ -85,6 +88,7 @@ public:
   void redo();
 
 private:
+  unsigned char* calculateLuminance(const unsigned char* source);
   void				clearStack(std::stack<UndoItem*>& s);
   char				m_imageName[256];
   std::stack<UndoItem*>	m_undoStack;

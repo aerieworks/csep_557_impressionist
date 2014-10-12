@@ -3,16 +3,28 @@
 #include "LineBrush.h"
 #include "Log.h"
 
-
-LineBrush::LineBrush(ImpressionistDoc * pDoc, char * name) :
-ImpBrush(pDoc, name) {
+LineBrush::LineBrush(ImpressionistDoc * pDoc, char * name)
+  : ImpBrush(pDoc, name) {
+  double sobelXMatrix[9] { -1, 0, 1, -2, 0, 2, -1, 0, 1 };
+  double sobelYMatrix[9] { 1, 2, 1, 0, 0, 0, -1, -2, -1 };
+  sobelOperatorX = new KernelFilter(3, 3, sobelXMatrix, 1, 0);
+  sobelOperatorY = new KernelFilter(3, 3, sobelYMatrix, 1, 0);
 }
 
-double LineBrush::calculateDirection() {
+LineBrush::~LineBrush() {
+  delete sobelOperatorX;
+  delete sobelOperatorY;
+}
+
+double LineBrush::calculateDirection(const Point source) {
   if (getSettings()->getBrushDirectionMode() == DirectionMode::Fixed) {
     return getSettings()->getBrushDirectionAsDouble();
   } else {
-    return 0;
+    const double xGradient = sobelOperatorX->evaluateAt(getDocument()->m_ucLuminance, source.x, source.y, getDocument()->m_nPaintWidth, getDocument()->m_nPaintHeight, 1);
+    const double yGradient = sobelOperatorY->evaluateAt(getDocument()->m_ucLuminance, source.x, source.y, getDocument()->m_nPaintWidth, getDocument()->m_nPaintHeight, 1);
+    const double angle = 180 * atan2(yGradient, xGradient) / PI;
+    Log::Debug << "Gradient at (" << source.x << ", " << source.y << "): " << xGradient << " x " << yGradient << ": " << angle << Log::end;
+    return angle;
   }
 }
 
@@ -27,7 +39,7 @@ Area* LineBrush::brushMove(const Point source, const Point target) {
   glMatrixMode(GL_MODELVIEW);
   glPushMatrix();
   glTranslated(target.x, target.y, 0);
-  glRotated(calculateDirection(), 0, 0, 1);
+  glRotated(calculateDirection(source), 0, 0, 1);
 
   glBegin(GL_LINES);
   setColor(source);

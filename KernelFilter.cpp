@@ -6,17 +6,29 @@
 KernelFilter::KernelFilter(const int width, const int height)
   : kernelWidth(width),
     kernelHeight(height),
+    // Calculate the row and column offset for the (0, 0) kernel value (i.e. (-2, -2) for a 5x5 kernel).
+    // Note that this has an interesting effect if kernel dimensions are even: it would ignore the current pixel's row/column.
+    kernelXOffset(-(int)floor(kernelWidth / 2.0)),
+    kernelYOffset(-(int)floor(kernelHeight / 2.0)),
     divisor(1),
     offset(0) {
-  // Calculate the row and column offset for the (0, 0) kernel value (i.e. (-2, -2) for a 5x5 kernel).
-  // Note that this has an interesting effect if kernel dimensions are even: it would ignore the current pixel's row/column.
-  kernelXOffset = -(int)floor(kernelWidth / 2.0);
-  kernelYOffset = -(int)floor(kernelHeight / 2.0);
-  kernel = new double[kernelWidth, kernelHeight];
+  kernel = new double[kernelWidth * kernelHeight];
   for (int i = 0; i < kernelWidth * kernelHeight; i++) {
     kernel[i] = 0;
   }
   kernel[(kernelHeight / 2 * kernelWidth) + kernelWidth / 2] = 1;
+}
+
+KernelFilter::KernelFilter(const int width, const int height, double* kernel, double divisor, double offset)
+  : KernelFilter(width, height) {
+  this->divisor = divisor;
+  this->offset = offset;
+
+  for (int y = 0; y < height; y++) {
+    for (int x = 0; x < width; x++) {
+      setKernelValue(x, y, kernel[y * kernelWidth + x]);
+    }
+  }
 }
 
 KernelFilter::~KernelFilter() {

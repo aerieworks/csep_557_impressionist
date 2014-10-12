@@ -3,6 +3,7 @@ class KernelFilter
 {
 public:
 	KernelFilter(const int width, const int height);
+  KernelFilter(const int width, const int height, double* kernel, double divisor, double offset);
 	~KernelFilter();
 
 	void apply(const unsigned char* source, unsigned char* dest, const int width, const int height) const;
@@ -20,8 +21,8 @@ private:
 	unsigned char fitFilterOutput(const double value) const;
 	const int kernelWidth;
 	const int kernelHeight;
-  int kernelXOffset;
-  int kernelYOffset;
+  const int kernelXOffset;
+  const int kernelYOffset;
 	double* kernel;
 	double divisor;
 	double offset;

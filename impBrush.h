@@ -1,6 +1,8 @@
 #ifndef IMPBRUSH_H
 #define IMPBRUSH_H
 
+#define PI 3.1415926535897932384626433832795
+
 //
 // ImpBrush.h
 //

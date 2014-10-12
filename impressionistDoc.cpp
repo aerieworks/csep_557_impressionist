@@ -33,6 +33,7 @@ ImpressionistDoc::ImpressionistDoc() {
 
   m_nWidth = -1;
   m_ucImage = NULL;
+  m_ucLuminance = NULL;
   m_ucPainting = NULL;
   m_ucPreviewBackup = NULL;
 
@@ -114,14 +115,16 @@ int ImpressionistDoc::loadImage(const char *iname) {
   delete[] m_ucImage;
   delete[] m_ucPainting;
   delete[] m_ucPreviewBackup;
+  delete[] m_ucLuminance;
 
   m_ucImage = data;
+  m_ucLuminance = calculateLuminance(m_ucImage);
 
   // allocate space for draw view
   m_ucPainting = new unsigned char[width*height * 3];
   m_ucPreviewBackup = new unsigned char[width*height * 3];
   memset(m_ucPainting, 0, width*height * 3);
-
+  
   m_pUI->m_mainWindow->resize(m_pUI->m_mainWindow->x(),
     m_pUI->m_mainWindow->y(),
     width * 2,
@@ -274,4 +277,31 @@ void ImpressionistDoc::redo() {
   } else {
     Log::Debug << "Nothing to redo." << Log::end;
   }
+}
+
+unsigned char* ImpressionistDoc::calculateLuminance(const unsigned char* source) {
+  // Do some rudimentary smoothing on the image first.
+  double kernelMatrix[25] = {
+      0, 1, 2, 1, 0,
+      1, 2, 3, 2, 1,
+      2, 3, 4, 3, 2,
+      1, 2, 3, 2, 1,
+      0, 1, 2, 1, 0
+  };
+  KernelFilter filter(5, 5, kernelMatrix, 40, 0);
+  unsigned char* filtered = new unsigned char[m_nPaintWidth * m_nPaintHeight * 3];
+  filter.apply(source, filtered, m_nPaintWidth, m_nPaintHeight);
+
+  unsigned char* dest = new unsigned char[m_nPaintHeight * m_nPaintWidth];
+  for (int y = 0; y < m_nPaintHeight; y++) {
+    for (int x = 0; x < m_nPaintWidth; x++) {
+      const int pixelIndex = y * m_nPaintWidth + x;
+      const int sourceIndex = pixelIndex * 3;
+      dest[pixelIndex] = 0.299 * filtered[sourceIndex] + 0.587 * source[sourceIndex + 1] + 0.114 * source[sourceIndex + 2];
+    }
+  }
+
+  delete[] filtered;
+
+  return dest;
 }
