@@ -233,6 +233,7 @@ void ImpressionistDoc::addUndoItem(UndoItem* item) {
   m_undoStack.push(item);
   // Clear the redo stack when new actions are performed.
   clearStack(m_redoStack);
+  m_pUI->updateUndoRedoMenus();
 }
 
 //----------------------------------------------------------------
@@ -259,6 +260,7 @@ void ImpressionistDoc::undo() {
     m_pUI->m_paintView->handleAction(item->getUndoAction());
     m_redoStack.push(item);
     m_undoStack.pop();
+    m_pUI->updateUndoRedoMenus();
   } else {
     Log::Debug << "Nothing to undo." << Log::end;
   }
@@ -274,6 +276,7 @@ void ImpressionistDoc::redo() {
     m_pUI->m_paintView->handleAction(item->getRedoAction());
     m_undoStack.push(item);
     m_redoStack.pop();
+    m_pUI->updateUndoRedoMenus();
   } else {
     Log::Debug << "Nothing to redo." << Log::end;
   }

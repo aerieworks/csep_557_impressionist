@@ -36,8 +36,8 @@ public:
   // The FLTK widgets
   Fl_Window*			m_mainWindow;
   Fl_Menu_Bar*		m_menubar;
-  const Fl_Menu_Item*	m_undoMenuItem;
-  const Fl_Menu_Item*	m_redoMenuItem;
+  Fl_Menu_Item*	m_undoMenuItem;
+  Fl_Menu_Item*	m_redoMenuItem;
 
   PaintView*			m_paintView;
   OriginalView*		m_origView;
@@ -64,6 +64,7 @@ public:
 
   void				show();
   void				resize_windows(int w, int h);
+  void        updateUndoRedoMenus();
 
   // Callbacks for the image filter dialogue (different from
   // the other callbacks because they aren't static)
@@ -78,7 +79,6 @@ public:
 private:
   BrushSettings* getCurrentBrushSettings();
   void updateBrushControls();
-  void updateUndoRedoMenus();
 
   ImpressionistDoc*	m_pDoc;		// pointer to document to communicate with the document
 

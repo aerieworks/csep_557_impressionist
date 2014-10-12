@@ -89,6 +89,7 @@ public:
 
 private:
   unsigned char* calculateLuminance(const unsigned char* source);
+  void updateUndoRedoMenus();
   void				clearStack(std::stack<UndoItem*>& s);
   char				m_imageName[256];
   std::stack<UndoItem*>	m_undoStack;

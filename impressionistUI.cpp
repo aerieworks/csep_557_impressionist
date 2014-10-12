@@ -434,6 +434,7 @@ void ImpressionistUI::setDocument(ImpressionistDoc* doc) {
   m_paintView->m_pDoc = doc;
   doc->setUI(this);
   this->updateBrushControls();
+  this->updateUndoRedoMenus();
 }
 
 // Getting/setting methods for the filter design UI
@@ -556,8 +557,10 @@ ImpressionistUI::ImpressionistUI()
   // install menu bar
   m_menubar = new Fl_Menu_Bar(0, 0, 600, 25);
   m_menubar->menu(menuitems);
-  m_undoMenuItem = m_menubar->find_item("&Undo");
-  m_redoMenuItem = m_menubar->find_item("&Redo");
+  m_undoMenuItem = (Fl_Menu_Item*)m_menubar->find_item("&Edit/&Undo");
+  Log::Debug << "Has undo menu? " << (m_undoMenuItem != NULL) << Log::end;
+  m_redoMenuItem = (Fl_Menu_Item*)m_menubar->find_item("&Edit/&Redo");
+  Log::Debug << "Has redo menu? " << (m_redoMenuItem != NULL) << Log::end;
 
   // Create a group that will hold two sub windows inside the main
   // window
@@ -634,9 +637,9 @@ ImpressionistUI::ImpressionistUI()
   m_BrushLineWidthSlider->callback(cb_lineWidthSlides);
 
   // Add brush direction controls to the dialog
-	m_brushDirectionGroup = new Fl_Group(10, 240, 370, 45, "Brush Direction");
+  m_brushDirectionGroup = new Fl_Group(10, 240, 370, 45, "Brush Direction");
   m_brushDirectionGroup->box(FL_ENGRAVED_FRAME);
-	m_brushDirectionGroup->when(FL_WHEN_CHANGED);
+  m_brushDirectionGroup->when(FL_WHEN_CHANGED);
   m_directionModeChoice = new Fl_Choice(20, 250, 100, 25);
   m_directionModeChoice->user_data((void*)(this));
   m_directionModeChoice->menu(directionModeMenu);
@@ -697,7 +700,7 @@ void ImpressionistUI::updateBrushControls() {
 
   const ImpBrush* currentBrush = getDocument()->m_pCurrentBrush;
   if (currentBrush == ImpBrush::c_pBrushes[BRUSH_LINES]
-      || currentBrush == ImpBrush::c_pBrushes[BRUSH_SCATTERED_LINES]) {
+    || currentBrush == ImpBrush::c_pBrushes[BRUSH_SCATTERED_LINES]) {
     Log::Debug << "Updating brush settings." << Log::end;
     m_brushDirectionGroup->show();
     if (getCurrentBrushSettings()->getBrushDirectionMode() == DirectionMode::Fixed) {
@@ -716,23 +719,15 @@ void ImpressionistUI::updateBrushControls() {
 }
 
 void ImpressionistUI::updateUndoRedoMenus() {
-  /*
-  if (m_pDoc->CanUndo())
-  {
-  m_undoMenuItem->show();
-  }
-  else
-  {
-  m_undoMenuItem->hide();
+  if (m_pDoc->canUndo()) {
+    m_undoMenuItem->activate();
+  } else {
+    m_undoMenuItem->deactivate();
   }
 
-  if (m_pDoc->CanRedo())
-  {
-  m_redoMenuItem->show();
+  if (m_pDoc->canRedo()) {
+    m_redoMenuItem->activate();
+  } else {
+    m_redoMenuItem->deactivate();
   }
-  else
-  {
-  m_redoMenuItem->hide();
-  }
-  */
 }
