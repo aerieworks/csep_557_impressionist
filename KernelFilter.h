@@ -6,6 +6,7 @@ public:
 	~KernelFilter();
 
 	void apply(const unsigned char* source, unsigned char* dest, const int width, const int height) const;
+  double evaluateAt(const unsigned char* source, const int x, const int y, const int width, const int height, const int channels) const;
 
 	double getKernelValue(const int row, const int col) const;
 	void setKernelValue(const int row, const int col, const double value);
@@ -19,6 +20,8 @@ private:
 	unsigned char fitFilterOutput(const double value) const;
 	const int kernelWidth;
 	const int kernelHeight;
+  int kernelXOffset;
+  int kernelYOffset;
 	double* kernel;
 	double divisor;
 	double offset;

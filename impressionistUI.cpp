@@ -343,6 +343,19 @@ void ImpressionistUI::cb_clear_canvas_button(Fl_Widget* o, void* v) {
 }
 
 
+//-------------------------------------------------------------
+// Sets the method to determine the brush direction for line
+// brushes.
+// Called by the UI when a direction mode is chosen.
+//-------------------------------------------------------------
+void ImpressionistUI::cb_directionModeChoice(Fl_Widget* o, void* v) {
+  ImpressionistUI* pUI = whoami(o);
+
+  const DirectionMode mode = static_cast<DirectionMode>((int)v);
+  pUI->getCurrentBrushSettings()->setBrushDirectionMode(mode);
+  pUI->updateBrushControls();
+}
+
 //-----------------------------------------------------------
 // Updates the brush direction to use from the value of the
 // line width slider.
@@ -524,7 +537,12 @@ Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE + 1] = {
     { 0 }
 };
 
-
+// Direction mode menu definition
+Fl_Menu_Item ImpressionistUI::directionModeMenu[3] = {
+    { "Fixed", FL_ALT + 'f', (Fl_Callback *)ImpressionistUI::cb_directionModeChoice, (void *)DirectionMode::Fixed },
+    { "Gradient", FL_ALT + 'g', (Fl_Callback *)ImpressionistUI::cb_directionModeChoice, (void *)DirectionMode::Gradient },
+    { 0 }
+};
 
 //----------------------------------------------------
 // Constructor.  Creates all of the widgets.
@@ -615,8 +633,15 @@ ImpressionistUI::ImpressionistUI()
   m_BrushLineWidthSlider->align(FL_ALIGN_RIGHT);
   m_BrushLineWidthSlider->callback(cb_lineWidthSlides);
 
-  // Add brush direction slider to the dialog
-  m_BrushDirectionSlider = new Fl_Value_Slider(10, 200, 300, 20, "Brush Direction");
+  // Add brush direction controls to the dialog
+	m_brushDirectionGroup = new Fl_Group(10, 240, 370, 45, "Brush Direction");
+  m_brushDirectionGroup->box(FL_ENGRAVED_FRAME);
+	m_brushDirectionGroup->when(FL_WHEN_CHANGED);
+  m_directionModeChoice = new Fl_Choice(20, 250, 100, 25);
+  m_directionModeChoice->user_data((void*)(this));
+  m_directionModeChoice->menu(directionModeMenu);
+  m_directionModeChoice->callback(cb_directionModeChoice);
+  m_BrushDirectionSlider = new Fl_Value_Slider(125, 253, 245, 20);
   m_BrushDirectionSlider->user_data((void*)this);
   m_BrushDirectionSlider->type(FL_HOR_NICE_SLIDER);
   m_BrushDirectionSlider->labelfont(FL_COURIER);
@@ -626,6 +651,7 @@ ImpressionistUI::ImpressionistUI()
   m_BrushDirectionSlider->value(0);
   m_BrushDirectionSlider->align(FL_ALIGN_RIGHT);
   m_BrushDirectionSlider->callback(cb_brushDirectionSlides);
+  m_brushDirectionGroup->end();
 
   m_brushDialog->end();
 
@@ -671,11 +697,20 @@ void ImpressionistUI::updateBrushControls() {
 
   const ImpBrush* currentBrush = getDocument()->m_pCurrentBrush;
   if (currentBrush == ImpBrush::c_pBrushes[BRUSH_LINES]
-    || currentBrush == ImpBrush::c_pBrushes[BRUSH_SCATTERED_LINES]) {
-    m_BrushDirectionSlider->show();
+      || currentBrush == ImpBrush::c_pBrushes[BRUSH_SCATTERED_LINES]) {
+    Log::Debug << "Updating brush settings." << Log::end;
+    m_brushDirectionGroup->show();
+    if (getCurrentBrushSettings()->getBrushDirectionMode() == DirectionMode::Fixed) {
+      Log::Debug << "Should show direction slider for Fixed." << Log::end;
+      m_BrushDirectionSlider->show();
+    } else {
+      Log::Debug << "Should not show direction slider for Gradient." << Log::end;
+      m_BrushDirectionSlider->hide();
+    }
+
     m_BrushLineWidthSlider->show();
   } else {
-    m_BrushDirectionSlider->hide();
+    m_brushDirectionGroup->hide();
     m_BrushLineWidthSlider->hide();
   }
 }

@@ -53,8 +53,10 @@ public:
   Fl_Slider*			m_BrushSizeSlider;
   Fl_Slider*			m_BrushOpacitySlider;
   Fl_Slider*			m_BrushLineWidthSlider;
+  Fl_Group*       m_brushDirectionGroup;
+  Fl_Choice*      m_directionModeChoice;
   Fl_Slider*			m_BrushDirectionSlider;
-  Fl_Button*          m_ClearCanvasButton;
+  Fl_Button*      m_ClearCanvasButton;
 
   // Member functions
   void				setDocument(ImpressionistDoc* doc);
@@ -85,6 +87,7 @@ private:
   // Static class members
   static Fl_Menu_Item		menuitems[];
   static Fl_Menu_Item		brushTypeMenu[NUM_BRUSH_TYPE + 1];
+  static Fl_Menu_Item   directionModeMenu[3];
 
   static ImpressionistUI*	whoami(Fl_Menu_* o);
   static ImpressionistUI* whoami(Fl_Widget* o);
@@ -105,6 +108,7 @@ private:
   static void	cb_sizeSlides(Fl_Widget* o, void* v);
   static void cb_opacitySlides(Fl_Widget* o, void* v);
   static void cb_lineWidthSlides(Fl_Widget* o, void* v);
+  static void	cb_directionModeChoice(Fl_Widget* o, void* v);
   static void cb_brushDirectionSlides(Fl_Widget* o, void* v);
 };
 

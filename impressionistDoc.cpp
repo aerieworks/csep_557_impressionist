@@ -230,7 +230,6 @@ void ImpressionistDoc::addUndoItem(UndoItem* item) {
   m_undoStack.push(item);
   // Clear the redo stack when new actions are performed.
   clearStack(m_redoStack);
-  Log::Debug << "Undo item added: " << item->getName() << ", can undo? " << canUndo() << Log::end;
 }
 
 //----------------------------------------------------------------

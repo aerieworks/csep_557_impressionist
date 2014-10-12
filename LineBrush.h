@@ -9,5 +9,8 @@ public:
   Area* brushMove(const Point source, const Point target);
   Area* brushEnd(const Point source, const Point target);
   char * getBrushName(void);
+
+private:
+  double calculateDirection();
 };
 
