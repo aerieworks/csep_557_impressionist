@@ -6,9 +6,10 @@ class CircleBrush :
 public:
 	CircleBrush(ImpressionistDoc * pDoc = NULL, char * name = NULL);
 
-	void BrushBegin(const Point source, const Point target);
-	virtual void BrushMove(const Point source, const Point target);
-	void BrushEnd(const Point source, const Point target);
+	Area* BrushBegin(const Point source, const Point target);
+	virtual Area* BrushMove(const Point source, const Point target);
+	Area* BrushEnd(const Point source, const Point target);
+	Area* GetModifiedArea(const Point target);
 	char * BrushName(void);
 };
 

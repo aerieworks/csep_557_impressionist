@@ -8,6 +8,7 @@
 //
 
 #include <stdlib.h>
+#include "Area.h"
 #include "viewModels/BrushSettings.h"
 
 // Each brush type has an associated constant.
@@ -41,9 +42,9 @@ protected:
 
 public:
 	// The implementation of your brush should realize these virtual functions
-	virtual void BrushBegin( const Point source, const Point target ) = 0;
-	virtual void BrushMove( const Point source, const Point target ) = 0;
-	virtual void BrushEnd( const Point source, const Point target ) = 0;
+	virtual Area* BrushBegin( const Point source, const Point target ) = 0;
+	virtual Area* BrushMove( const Point source, const Point target ) = 0;
+	virtual Area* BrushEnd( const Point source, const Point target ) = 0;
 
 	// according to the source image and the position, determine the draw color
 	void SetColor( const Point source );

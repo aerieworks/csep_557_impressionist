@@ -7,8 +7,11 @@
 #ifndef ImpressionistDoc_h
 #define ImpressionistDoc_h
 
+#include <stack>
+
 #include "impressionist.h"
 #include "imageio.h"
+#include "UndoItem.h"
 
 class ImpressionistUI;
 
@@ -16,6 +19,7 @@ class ImpressionistDoc
 {
 public:
 	ImpressionistDoc();
+	~ImpressionistDoc();
 
 	void	setUI(ImpressionistUI* ui);		// Assign the UI to use
 
@@ -68,12 +72,26 @@ public:
 	// Get the color of the original picture at the specified point	
 	GLubyte* GetOriginalPixel( const Point p );
 
+	// Applies the pixels to the painting at the specified location.
+	void ApplyToPainting(const Point location, const int width, const int height, const unsigned char* pixels);
 
+	// Adds the item to the undo stack.
+	void AddUndoItem(UndoItem* item);
+	// Gets whether or not there is an action that can be undone.
+	bool CanUndo() const;
+	// Gets whether or not there is an action that can be redone.
+	bool CanRedo() const;
+	// Undo the most recent action.
+	void Undo();
+	// Redo the most recent action.
+	void Redo();
 
 private:
-	unsigned char	FitFilterOutput(const double value) const;
-	char			m_imageName[256];
-
+	unsigned char		FitFilterOutput(const double value) const;
+	void				ClearStack(std::stack<UndoItem*>& s);
+	char				m_imageName[256];
+	std::stack<UndoItem*>	m_undoStack;
+	std::stack<UndoItem*>	m_redoStack;
 };
 
 extern void MessageBox(char *message);

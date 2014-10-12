@@ -6,8 +6,8 @@ ScatteredCircleBrush::ScatteredCircleBrush(ImpressionistDoc * pDoc, char * name)
 {
 }
 
-void ScatteredCircleBrush::BrushMove(const Point source, const Point target)
+Area* ScatteredCircleBrush::BrushMove(const Point source, const Point target)
 {
 	Point scatteredTarget = Scattered::GetScatteredTarget(target);
-	CircleBrush::BrushMove(source, scatteredTarget);
+	return CircleBrush::BrushMove(source, scatteredTarget);
 }

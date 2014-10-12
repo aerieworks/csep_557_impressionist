@@ -7,6 +7,6 @@ class ScatteredCircleBrush :
 public:
 	ScatteredCircleBrush(ImpressionistDoc * pDoc = NULL, char * name = NULL);
 
-	void BrushMove(const Point source, const Point target);
+	Area* BrushMove(const Point source, const Point target);
 };
 

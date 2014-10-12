@@ -7,13 +7,13 @@ ImpBrush(pDoc, name)
 {
 }
 
-void LineBrush::BrushBegin(const Point source, const Point target)
+Area* LineBrush::BrushBegin(const Point source, const Point target)
 {
 	glLineWidth(GetSettings()->GetLineWidthAsFloat());
-	BrushMove(source, target);
+	return BrushMove(source, target);
 }
 
-void LineBrush::BrushMove(const Point source, const Point target)
+Area* LineBrush::BrushMove(const Point source, const Point target)
 {
 	int lineLength = GetSettings()->GetSizeAsInteger();
 
@@ -23,9 +23,13 @@ void LineBrush::BrushMove(const Point source, const Point target)
 		glVertex2d(target.x - lineLength / 2.0, target.y);
 		glVertex2d(target.x + lineLength / 2.0, target.y);
 	glEnd();
+
+	const float lineWidth = GetSettings()->GetLineWidthAsFloat();
+	return new Area(target.x - ceil(lineLength / 2.0), target.y - ceil(lineWidth / 2), lineLength, (int)ceil(lineWidth));
 }
 
-void LineBrush::BrushEnd(const Point source, const Point target)
+Area* LineBrush::BrushEnd(const Point source, const Point target)
 {
-
+	// Nothing to do.
+	return NULL;
 }

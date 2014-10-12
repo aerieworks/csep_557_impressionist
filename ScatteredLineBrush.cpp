@@ -7,8 +7,8 @@ ScatteredLineBrush::ScatteredLineBrush(ImpressionistDoc * pDoc, char * name) :
 }
 
 
-void ScatteredLineBrush::BrushMove(const Point source, const Point target)
+Area* ScatteredLineBrush::BrushMove(const Point source, const Point target)
 {
 	Point scatteredTarget = Scattered::GetScatteredTarget(target);
-	LineBrush::BrushMove(source, scatteredTarget);
+	return LineBrush::BrushMove(source, scatteredTarget);
 }

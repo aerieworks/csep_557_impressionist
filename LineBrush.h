@@ -6,9 +6,9 @@ class LineBrush :
 public:
 	LineBrush(ImpressionistDoc * pDoc = NULL, char * name = NULL);
 
-	void BrushBegin(const Point source, const Point target);
-	void BrushMove(const Point source, const Point target);
-	void BrushEnd(const Point source, const Point target);
+	Area* BrushBegin(const Point source, const Point target);
+	Area* BrushMove(const Point source, const Point target);
+	Area* BrushEnd(const Point source, const Point target);
 	char * BrushName(void);
 };
 

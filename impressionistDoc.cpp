@@ -7,10 +7,9 @@
 
 
 #include <FL/fl_ask.H>
-#include <iostream>
 
 #include <algorithm>
-
+#include <sstream>
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
 
@@ -19,6 +18,7 @@
 // Include individual brush headers here.
 #include "CircleBrush.h"
 #include "LineBrush.h"
+#include "Log.h"
 #include "pointBrush.h"
 #include "ScatteredCircleBrush.h"
 #include "ScatteredLineBrush.h"
@@ -61,6 +61,12 @@ ImpressionistDoc::ImpressionistDoc()
 
 }
 
+ImpressionistDoc::~ImpressionistDoc()
+{
+	// Empty and deallocate the undo and redo stacks.
+	ClearStack(m_undoStack);
+	ClearStack(m_redoStack);
+}
 
 //---------------------------------------------------------
 // Set the current UI 
@@ -304,4 +310,89 @@ GLubyte* ImpressionistDoc::GetOriginalPixel( const Point p )
 }
 
 
+//----------------------------------------------------------------
+// Applies the specified pixels to the painting at the specified
+// location.  Pixels are assumed to be ordered upside down, like
+// OpenGL orders them.
+//----------------------------------------------------------------
+void ImpressionistDoc::ApplyToPainting(const Point location, const int width, const int height, const unsigned char* pixels)
+{
+	Log::Debug << "Applying to painting: " << width << " x " << height << " area starting at (" << location.x << ", " << location.y << ")." << Log::end;
+	glDrawPixels(width, height, GL_RGB, GL_UNSIGNED_BYTE, pixels);
+	m_pUI->m_paintView->refresh();
+}
 
+void ImpressionistDoc::ClearStack(std::stack<UndoItem*>& st)
+{
+	while (!st.empty())
+	{
+		UndoItem* item = st.top();
+		delete item;
+		st.pop();
+	}
+}
+
+//----------------------------------------------------------------
+// Performs the action and adds it to the undo queue.
+//----------------------------------------------------------------
+void ImpressionistDoc::AddUndoItem(UndoItem* item)
+{
+	m_undoStack.push(item);
+	// Clear the redo stack when new actions are performed.
+	ClearStack(m_redoStack);
+	Log::Debug << "Undo item added: " << item->GetName() << ", can undo? " << CanUndo() << Log::end;
+}
+
+//----------------------------------------------------------------
+// Gets whether or not there is an action that can be undone.
+//----------------------------------------------------------------
+bool ImpressionistDoc::CanUndo() const
+{
+	return !m_undoStack.empty();
+}
+
+//----------------------------------------------------------------
+// Gets whether or not there is an action that can be redone.
+//----------------------------------------------------------------
+bool ImpressionistDoc::CanRedo() const
+{
+	return !m_redoStack.empty();
+}
+
+//----------------------------------------------------------------
+// Undoes the most recent action.
+//----------------------------------------------------------------
+void ImpressionistDoc::Undo()
+{
+	if (CanUndo())
+	{
+		UndoItem* item = m_undoStack.top();
+		Log::Debug << "Doc: Undoing " << item->GetName() << Log::end;
+		m_pUI->m_paintView->HandleAction(item->GetUndoAction());
+		m_redoStack.push(item);
+		m_undoStack.pop();
+	}
+	else
+	{
+		Log::Debug << "Nothing to undo." << Log::end;
+	}
+}
+
+//----------------------------------------------------------------
+// Redoes the most recent action.
+//----------------------------------------------------------------
+void ImpressionistDoc::Redo()
+{
+	if (CanRedo())
+	{
+		UndoItem* item = m_redoStack.top();
+		Log::Debug << "Doc: Redoing " << item->GetName() << Log::end;
+		m_pUI->m_paintView->HandleAction(item->GetRedoAction());
+		m_undoStack.push(item);
+		m_redoStack.pop();
+	}
+	else
+	{
+		Log::Debug << "Nothing to redo." << Log::end;
+	}
+}

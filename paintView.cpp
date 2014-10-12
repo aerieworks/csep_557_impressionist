@@ -4,11 +4,15 @@
 // The code maintaining the painting view of the input images
 //
 
+#include "Log.h"
 #include "impressionist.h"
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
 #include "paintView.h"
-#include "impBrush.h"
+#include "UndoItem.h"
+#include "actions/BrushBeginAction.h"
+#include "actions/BrushEndAction.h"
+#include "actions/BrushMoveAction.h"
 
 
 #define LEFT_MOUSE_DOWN		1
@@ -24,10 +28,6 @@
 #define max(a, b)	( ( (a)>(b) ) ? (a) : (b) )
 #endif
 
-static int		eventToDo;
-static int		isAnEvent=0;
-static Point	coord;
-
 PaintView::PaintView(int			x, 
 					 int			y, 
 					 int			w, 
@@ -37,7 +37,7 @@ PaintView::PaintView(int			x,
 {
 	m_nWindowWidth	= w;
 	m_nWindowHeight	= h;
-
+	m_actionToDo = NULL;
 }
 
 
@@ -113,9 +113,8 @@ void PaintView::draw()
 	m_nStartRow		= startrow;
 	m_nEndRow		= startrow + drawHeight;
 	m_nStartCol		= scrollpos.x;
-	m_nEndCol		= m_nStartCol + drawWidth;
 
-	if ( m_pDoc->m_ucPainting && !isAnEvent) 
+	if ( m_pDoc->m_ucPainting && m_actionToDo == NULL) 
 	{
 		RestoreContent();
 
@@ -123,55 +122,25 @@ void PaintView::draw()
     
 
     
-	if ( m_pDoc->m_ucPainting && isAnEvent)
+	if (m_pDoc->m_ucPainting && m_actionToDo)
 	{
-        
 #ifndef _WIN32
         RestoreContent();
 #endif
 
-		// Clear it after processing.
-		isAnEvent	= 0;	
+		Area* modifiedArea = m_actionToDo->DoAction();
+		delete m_actionToDo;
+		m_actionToDo = NULL;
 
-		Point source( coord.x + m_nStartCol, m_nEndRow - coord.y );
-		Point target( coord.x, m_nWindowHeight - coord.y );
-		
-		// This is the event handler
-		switch (eventToDo) 
-		{
-		case LEFT_MOUSE_DOWN:
-			m_pDoc->m_pCurrentBrush->BrushBegin( source, target );
-			break;
-		case LEFT_MOUSE_DRAG:
-			m_pDoc->m_pCurrentBrush->BrushMove( source, target );
-			break;
-		case LEFT_MOUSE_UP:
-			m_pDoc->m_pCurrentBrush->BrushEnd( source, target );
-
-			SaveCurrentContent();
-			RestoreContent();
-			break;
-		case RIGHT_MOUSE_DOWN:
-
-			break;
-		case RIGHT_MOUSE_DRAG:
-
-			break;
-		case RIGHT_MOUSE_UP:
-
-			break;
-
-		default:
-			printf("Unknown event!!\n");		
-			break;
-		}
-        
 #ifndef _WIN32
         SaveCurrentContent();
 #endif
-        
-	}
 
+		if (modifiedArea != NULL)
+		{
+			AddUndoFor(modifiedArea);
+		}
+	}
     
 	glFlush();
 
@@ -181,49 +150,55 @@ void PaintView::draw()
 	glDrawBuffer(GL_BACK);
 #endif
 	#endif // !MESA
+
 }
 
+void PaintView::HandleAction(Action* action)
+{
+	m_actionToDo = action;
+	redraw();
+}
 
 int PaintView::handle(int event)
 {
+	Point scrollPos;// = GetScrollPosition();
+	scrollPos.x = 0;
+	scrollPos.y	= 0;
+
+	const int windowHeight = h();
+	const int drawHeight = min( windowHeight, m_pDoc->m_nPaintHeight );
+	const int startRow = max(0, m_pDoc->m_nPaintHeight - (scrollPos.y + drawHeight));
+	const int endRow = startRow + drawHeight;
+	const int startCol = scrollPos.x;
+
+	Point mousePos = Point(Fl::event_x(), Fl::event_y());
+	Point source( mousePos.x + scrollPos.x, endRow - mousePos.y );
+	Point target( mousePos.x, windowHeight - mousePos.y );
+
 	switch(event)
 	{
 	case FL_ENTER:
 	    redraw();
 		break;
 	case FL_PUSH:
-		coord.x = Fl::event_x();
-		coord.y = Fl::event_y();
-		if (Fl::event_button()>1)
-			eventToDo=RIGHT_MOUSE_DOWN;
-		else
-			eventToDo=LEFT_MOUSE_DOWN;
-		isAnEvent=1;
-		redraw();
+		if (Fl::event_button() == 1)
+		{
+			HandleAction(new BrushBeginAction(m_pDoc->m_pCurrentBrush, source, target));
+		}
 		break;
 	case FL_DRAG:
-		coord.x = Fl::event_x();
-		coord.y = Fl::event_y();
-		if (Fl::event_button()>1)
-			eventToDo=RIGHT_MOUSE_DRAG;
-		else
-			eventToDo=LEFT_MOUSE_DRAG;
-		isAnEvent=1;
-		redraw();
+		if (Fl::event_button() == 1)
+		{
+			HandleAction(new BrushMoveAction(m_pDoc->m_pCurrentBrush, source, target));
+		}
 		break;
 	case FL_RELEASE:
-		coord.x = Fl::event_x();
-		coord.y = Fl::event_y();
-		if (Fl::event_button()>1)
-			eventToDo=RIGHT_MOUSE_UP;
-		else
-			eventToDo=LEFT_MOUSE_UP;
-		isAnEvent=1;
-		redraw();
-		break;
-	case FL_MOVE:
-		coord.x = Fl::event_x();
-		coord.y = Fl::event_y();
+		if (Fl::event_button() == 1)
+		{
+			HandleAction(new BrushEndAction(m_pDoc->m_pCurrentBrush, source, target));
+			SaveCurrentContent();
+			RestoreContent();
+		}
 		break;
 	default:
 		return 0;
@@ -285,3 +260,20 @@ void PaintView::RestoreContent()
 //	glDrawBuffer(GL_FRONT);
 }
 
+void PaintView::AddUndoFor(Area* modifiedArea)
+{
+	glPixelStorei(GL_PACK_ROW_LENGTH, modifiedArea->GetWidth());
+	glPixelStorei(GL_PACK_ALIGNMENT, 1);
+
+	GLubyte* before = new GLubyte[3 * modifiedArea->GetWidth() * modifiedArea->GetHeight()];
+	glReadBuffer(GL_FRONT);
+	glReadPixels(modifiedArea->GetX(), modifiedArea->GetY(), modifiedArea->GetWidth(), modifiedArea->GetHeight(), GL_RGB, GL_UNSIGNED_BYTE, (void*)before);
+	//Log::PrintPixels("Before for undo", modifiedArea, before, 3);
+
+	GLubyte* after = new GLubyte[3 * modifiedArea->GetWidth() * modifiedArea->GetHeight()];
+	glReadBuffer(GL_BACK);
+	glReadPixels(modifiedArea->GetX(), modifiedArea->GetY(), modifiedArea->GetWidth(), modifiedArea->GetHeight(), GL_RGB, GL_UNSIGNED_BYTE, (void*)after);
+	//Log::PrintPixels("After for redo", modifiedArea, after, 3);
+
+	m_pDoc->AddUndoItem(new UndoItem("Brush", modifiedArea, before, after));
+}

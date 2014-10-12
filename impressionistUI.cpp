@@ -14,6 +14,7 @@
 
 #include "impressionistUI.h"
 #include "impressionistDoc.h"
+#include "Log.h"
 
 #include "dialog.h"
 
@@ -298,7 +299,23 @@ void ImpressionistUI::cb_exit(Fl_Menu_* o, void* v)
 
 }
 
+//-----------------------------------------------------------
+// Undoes the most recent action.
+//-----------------------------------------------------------
+void ImpressionistUI::cb_undo(Fl_Menu_* o, void* v)
+{
+	Log::Debug << "UI: Undo" << Log::end;
+	whoami(o)->getDocument()->Undo();
+}
 
+//-----------------------------------------------------------
+// Redoes the most recent action.
+//-----------------------------------------------------------
+void ImpressionistUI::cb_redo(Fl_Menu_* o, void* v)
+{
+	Log::Debug << "UI: Redo" << Log::end;
+	whoami(o)->getDocument()->Redo();
+}
 
 //-----------------------------------------------------------
 // Brings up an about dialog box
@@ -306,7 +323,7 @@ void ImpressionistUI::cb_exit(Fl_Menu_* o, void* v)
 //-----------------------------------------------------------
 void ImpressionistUI::cb_about(Fl_Menu_* o, void* v) 
 {
-	fl_message("Impressionist FLTK version for CSE 457");
+	fl_message("Impressionist FLTK version for CSE 557, by Annabelle Richard");
 }
 
 //------- UI should keep track of the current for all the controls for answering the query from Doc ---------
@@ -496,6 +513,11 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
 		{ "&Quit",			FL_ALT + 'q', (Fl_Callback *)ImpressionistUI::cb_exit },
 		{ 0 },
 
+	{ "&Edit",      0, 0, 0, FL_SUBMENU },
+		{ "&Undo", FL_ALT + 'z', (Fl_Callback*)ImpressionistUI::cb_undo },
+		{ "&Redo", FL_ALT + 'Z', (Fl_Callback*)ImpressionistUI::cb_redo },
+		{ 0 },
+
 	{ "&Help",		0, 0, 0, FL_SUBMENU },
 		{ "&About",	FL_ALT + 'a', (Fl_Callback *)ImpressionistUI::cb_about },
 		{ 0 },
@@ -527,6 +549,8 @@ ImpressionistUI::ImpressionistUI() {
 		// install menu bar
 		m_menubar = new Fl_Menu_Bar(0, 0, 600, 25);
 		m_menubar->menu(menuitems);
+		m_undoMenuItem = m_menubar->find_item("&Undo");
+		m_redoMenuItem = m_menubar->find_item("&Redo");
 
 		// Create a group that will hold two sub windows inside the main
 		// window
@@ -674,4 +698,27 @@ void ImpressionistUI::UpdateBrushControls()
 	{
 		m_BrushLineWidthSlider->hide();
 	}
+}
+
+void ImpressionistUI::UpdateUndoRedoMenus()
+{
+	/*
+	if (m_pDoc->CanUndo())
+	{
+		m_undoMenuItem->show();
+	}
+	else
+	{
+		m_undoMenuItem->hide();
+	}
+
+	if (m_pDoc->CanRedo())
+	{
+		m_redoMenuItem->show();
+	}
+	else
+	{
+		m_redoMenuItem->hide();
+	}
+	*/
 }

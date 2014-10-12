@@ -16,6 +16,8 @@
     #include <GL/glu.h>
 #endif
 #include <stdlib.h>
+#include "actions/Action.h"
+#include "Area.h"
 
 class ImpressionistDoc;
 
@@ -24,6 +26,7 @@ class PaintView : public Fl_Gl_Window
 public:
 	PaintView(int x, int y, int w, int h, const char* l);
 	void draw();
+	void HandleAction(Action* action);
 	int handle(int event);
 
 	void refresh();
@@ -37,7 +40,10 @@ public:
 	ImpressionistDoc *m_pDoc;
 
 private:
+	void AddUndoFor(Area* invalidatedArea);
+
 	GLvoid* m_pPaintBitstart;
+	Action* m_actionToDo;
 	int		m_nDrawWidth,
 			m_nDrawHeight,
 			m_nStartRow, 

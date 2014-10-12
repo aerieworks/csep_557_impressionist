@@ -35,6 +35,8 @@ public:
 	// The FLTK widgets
 	Fl_Window*			m_mainWindow;
 	Fl_Menu_Bar*		m_menubar;
+	const Fl_Menu_Item*	m_undoMenuItem;
+	const Fl_Menu_Item*	m_redoMenuItem;
 								
 	PaintView*			m_paintView;
 	OriginalView*		m_origView;
@@ -72,6 +74,7 @@ public:
 private:
 	BrushSettings* GetCurrentBrushSettings();
 	void UpdateBrushControls();
+	void UpdateUndoRedoMenus();
 
 	ImpressionistDoc*	m_pDoc;		// pointer to document to communicate with the document
 
@@ -97,6 +100,8 @@ private:
 	static void	cb_filter_kernel(Fl_Menu_* o, void* v);
 	static void	cb_clear_canvas(Fl_Menu_* o, void* v);
 	static void	cb_exit(Fl_Menu_* o, void* v);
+	static void cb_undo(Fl_Menu_* o, void* v);
+	static void cb_redo(Fl_Menu_* o, void* v);
 	static void	cb_about(Fl_Menu_* o, void* v);
 	static void	cb_brushChoice(Fl_Widget* o, void* v);
 	static void	cb_clear_canvas_button(Fl_Widget* o, void* v);

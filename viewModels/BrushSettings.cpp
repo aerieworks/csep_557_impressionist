@@ -18,7 +18,7 @@ double BrushSettings::GetLineWidthAsDouble() const
 
 float BrushSettings::GetLineWidthAsFloat() const
 {
-	return lineWidth;
+	return (float)lineWidth;
 }
 
 void BrushSettings::SetLineWidth(const double lineWidth)

@@ -8,12 +8,14 @@
 //
 
 #include <stdio.h>
+#include <iostream>
 
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
 #include <FL/Fl_Box.H>
 #include <FL/Fl_Shared_Image.H>
 
+#include "Log.h"
 #include "impressionistUI.h"
 #include "impressionistDoc.h"
 
@@ -23,6 +25,10 @@ ImpressionistDoc *impDoc;
 int main(int	argc, 
 		 char**	argv) 
 {
+	if (argc > 1)
+	{
+		Log::SetThreshold(argv[1]);
+	}
 	impDoc = new ImpressionistDoc();
 
 	// Create the UI

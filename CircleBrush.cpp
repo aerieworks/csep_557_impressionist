@@ -11,13 +11,22 @@ CircleBrush::CircleBrush(ImpressionistDoc * pDoc, char * name) :
 }
 
 
-void CircleBrush::BrushBegin(const Point source, const Point target)
+Area* CircleBrush::GetModifiedArea(const Point brushLocation)
 {
-	glPolygonMode(GL_FRONT, GL_FILL);
-	BrushMove(source, target);
+	const int pointSize = GetSettings()->GetSizeAsInteger();
+	const int offset = ceil(pointSize / 2) + 1;
+	const int x = max(0, brushLocation.x - offset);
+	const int y = max(0, brushLocation.y - offset);
+	return new Area(x, y, offset * 2, offset * 2);
 }
 
-void CircleBrush::BrushMove(const Point source, const Point target)
+Area* CircleBrush::BrushBegin(const Point source, const Point target)
+{
+	glPolygonMode(GL_FRONT, GL_FILL);
+	return BrushMove(source, target);
+}
+
+Area* CircleBrush::BrushMove(const Point source, const Point target)
 {
 	double radius = GetSettings()->GetSizeAsDouble() / 2;
 
@@ -31,9 +40,11 @@ void CircleBrush::BrushMove(const Point source, const Point target)
 		}
 
 	glEnd();
+	return GetModifiedArea(target);
 }
 
-void CircleBrush::BrushEnd(const Point source, const Point target)
+Area* CircleBrush::BrushEnd(const Point source, const Point target)
 {
-
+	// Nothing to do.
+	return NULL;
 }
