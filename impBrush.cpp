@@ -9,40 +9,36 @@
 #include "impBrush.h"
 
 // Static class member initializations
-int			ImpBrush::c_nBrushCount	= 0;
-ImpBrush**	ImpBrush::c_pBrushes	= NULL;
+int			ImpBrush::c_nBrushCount = 0;
+ImpBrush**	ImpBrush::c_pBrushes = NULL;
 
-ImpBrush::ImpBrush(ImpressionistDoc*	pDoc, 
-				   char*				name) :
-					m_pDoc(pDoc), 
-					m_pBrushName(name),
-					m_settings()
-{
+ImpBrush::ImpBrush(ImpressionistDoc*	pDoc,
+  char*				name) :
+  m_pDoc(pDoc),
+  m_pBrushName(name),
+  m_settings() {
 
 }
 
 //---------------------------------------------------
 // Return m_pDoc, which connects the UI and brushes
 //---------------------------------------------------
-ImpressionistDoc* ImpBrush::GetDocument(void)
-{
-	return m_pDoc;
+ImpressionistDoc* ImpBrush::getDocument(void) {
+  return m_pDoc;
 }
 
 //---------------------------------------------------
 // Return the name of the current brush
 //---------------------------------------------------
-char* ImpBrush::BrushName(void)
-{
-	return m_pBrushName;
+char* ImpBrush::getBrushName(void) {
+  return m_pBrushName;
 }
 
 //----------------------------------------------------
 // Return the settings object for the brush
 //----------------------------------------------------
-BrushSettings* ImpBrush::GetSettings()
-{
-	return &m_settings;
+BrushSettings* ImpBrush::getSettings() {
+  return &m_settings;
 }
 
 //----------------------------------------------------
@@ -50,15 +46,14 @@ BrushSettings* ImpBrush::GetSettings()
 // which is the coord at the original window to sample 
 // the color from
 //----------------------------------------------------
-void ImpBrush::SetColor (const Point source)
-{
-	ImpressionistDoc* pDoc = GetDocument();
+void ImpBrush::setColor(const Point source) {
+  ImpressionistDoc* pDoc = getDocument();
 
 
-	GLubyte color[4];
+  GLubyte color[4];
 
-	memcpy (color, pDoc->GetOriginalPixel( source ), 3);
-	color[3] = GetSettings()->GetOpacityAsChar();
-	glColor4ubv(color);
+  memcpy(color, pDoc->getOriginalPixel(source), 3);
+  color[3] = getSettings()->getOpacityAsChar();
+  glColor4ubv(color);
 
 }

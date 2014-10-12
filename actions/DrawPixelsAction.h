@@ -3,15 +3,14 @@
 #include <gl/GL.h>
 #include "Action.h"
 class DrawPixelsAction :
-	public Action
-{
+  public Action {
 public:
-	DrawPixelsAction(const Area* area, const GLubyte* pixels);
+  DrawPixelsAction(const Area* area, const GLubyte* pixels);
 
-	Area* DoAction();
+  Area* doAction();
 
 private:
-	const Area* area;
-	const GLubyte* pixels;
+  const Area* area;
+  const GLubyte* pixels;
 };
 

@@ -11,9 +11,9 @@
 #include <FL/Fl_Gl_Window.H>
 #include <FL/gl.h>
 #ifdef __APPLE__
-    #include <OpenGL/glu.h>
+#include <OpenGL/glu.h>
 #else
-    #include <GL/glu.h>
+#include <GL/glu.h>
 #endif
 #include <stdlib.h>
 #include "actions/Action.h"
@@ -21,37 +21,36 @@
 
 class ImpressionistDoc;
 
-class PaintView : public Fl_Gl_Window
-{
+class PaintView : public Fl_Gl_Window {
 public:
-	PaintView(int x, int y, int w, int h, const char* l);
-	void draw();
-	void HandleAction(Action* action);
-	int handle(int event);
+  PaintView(int x, int y, int w, int h, const char* l);
+  void draw();
+  void handleAction(Action* action);
+  int handle(int event);
 
-	void refresh();
-	
-	void resizeWindow(int width, int height);
+  void refresh();
 
-	void SaveCurrentContent();
+  void resizeWindow(int width, int height);
 
-	void RestoreContent();
+  void saveCurrentContent();
 
-	ImpressionistDoc *m_pDoc;
+  void restoreContent();
+
+  ImpressionistDoc *m_pDoc;
 
 private:
-	void AddUndoFor(Area* invalidatedArea);
+  void addUndoFor(Area* invalidatedArea);
 
-	GLvoid* m_pPaintBitstart;
-	Action* m_actionToDo;
-	int		m_nDrawWidth,
-			m_nDrawHeight,
-			m_nStartRow, 
-			m_nEndRow,
-			m_nStartCol, 
-			m_nEndCol,
-			m_nWindowWidth, 
-			m_nWindowHeight;
+  GLvoid* m_pPaintBitstart;
+  Action* m_actionToDo;
+  int		m_nDrawWidth,
+    m_nDrawHeight,
+    m_nStartRow,
+    m_nEndRow,
+    m_nStartCol,
+    m_nEndCol,
+    m_nWindowWidth,
+    m_nWindowHeight;
 
 };
 

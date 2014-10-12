@@ -33,7 +33,7 @@ KernelFilter::~KernelFilter()
  *					origImg[3*(row*srcBufferWidth+column)+2]
  *					are R, G, B values for pixel at (column, row).
  */
-void KernelFilter::Apply(const unsigned char* source, unsigned char* dest, const int width, const int height) const
+void KernelFilter::apply(const unsigned char* source, unsigned char* dest, const int width, const int height) const
 {
 	// Calculate the row and column offset for the (0, 0) kernel value (i.e. (-2, -2) for a 5x5 kernel).
 	// Note that this has an interesting effect if kernel dimensions are even: it would ignore the current pixel's row/column.
@@ -72,7 +72,7 @@ void KernelFilter::Apply(const unsigned char* source, unsigned char* dest, const
 
 				// Adjust filter output and make sure it fits within the bounds of an RGB color value.
 				const double adjustedValue = (double)combinedValue / divisor + offset;
-				dest[destPixelStart + color] = FitFilterOutput(adjustedValue);
+				dest[destPixelStart + color] = fitFilterOutput(adjustedValue);
 			}
 		}
 	}
@@ -83,37 +83,37 @@ void KernelFilter::Apply(const unsigned char* source, unsigned char* dest, const
 // image.  Values will be rounded and truncated to fit within the
 // inclusive range [0, 255].
 //------------------------------------------------------------------
-unsigned char KernelFilter::FitFilterOutput(const double value) const
+unsigned char KernelFilter::fitFilterOutput(const double value) const
 {
 	return (unsigned char)max(0, min(255, round(value)));
 }
 
-double KernelFilter::GetKernelValue(const int row, const int col) const
+double KernelFilter::getKernelValue(const int row, const int col) const
 {
 	return kernel[row * kernelWidth + col];
 }
 
-void KernelFilter::SetKernelValue(const int row, const int col, const double value)
+void KernelFilter::setKernelValue(const int row, const int col, const double value)
 {
 	kernel[row * kernelWidth + col] = value;
 }
 
-double KernelFilter::GetDivisor() const
+double KernelFilter::getDivisor() const
 {
 	return divisor;
 }
 
-void KernelFilter::SetDivisor(const double divisor)
+void KernelFilter::setDivisor(const double divisor)
 {
 	this->divisor = divisor;
 }
 
-double KernelFilter::GetOffset() const
+double KernelFilter::getOffset() const
 {
 	return offset;
 }
 
-void KernelFilter::SetOffset(const double offset)
+void KernelFilter::setOffset(const double offset)
 {
 	this->offset = offset;
 }

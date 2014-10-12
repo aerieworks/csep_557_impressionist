@@ -11,45 +11,40 @@
 
 extern float frand();
 
-PointBrush::PointBrush( ImpressionistDoc* pDoc, char* name ) :
-	ImpBrush(pDoc,name)
-{
+PointBrush::PointBrush(ImpressionistDoc* pDoc, char* name) :
+ImpBrush(pDoc, name) {
 }
 
-Area* PointBrush::GetModifiedArea(const Point brushLocation)
-{
+Area* PointBrush::getModifiedArea(const Point brushLocation) {
 
-	const int pointSize = GetSettings()->GetSizeAsInteger();
-	const int offset = ceil(pointSize / 2) + 1;
-	const int x = max(0, brushLocation.x - offset);
-	const int y = max(0, brushLocation.y - offset);
-	return new Area(x, y, offset * 2, offset * 2);
+  const int pointSize = getSettings()->getSizeAsInteger();
+  const int offset = ceil(pointSize / 2) + 1;
+  const int x = max(0, brushLocation.x - offset);
+  const int y = max(0, brushLocation.y - offset);
+  return new Area(x, y, offset * 2, offset * 2);
 }
 
-Area* PointBrush::BrushBegin( const Point source, const Point target )
-{
-	glPointSize(GetSettings()->GetSizeAsFloat());
-	return BrushMove(source, target);
+Area* PointBrush::brushBegin(const Point source, const Point target) {
+  glPointSize(getSettings()->getSizeAsFloat());
+  return brushMove(source, target);
 }
 
-Area* PointBrush::BrushMove( const Point source, const Point target )
-{
-	ImpressionistDoc* pDoc = GetDocument();
-	ImpressionistUI* dlg=pDoc->m_pUI;
+Area* PointBrush::brushMove(const Point source, const Point target) {
+  ImpressionistDoc* pDoc = getDocument();
+  ImpressionistUI* dlg = pDoc->m_pUI;
 
-	glBegin( GL_POINTS );
-		SetColor( source );
+  glBegin(GL_POINTS);
+  setColor(source);
 
-		glVertex2d( target.x, target.y );
+  glVertex2d(target.x, target.y);
 
-	glEnd();
+  glEnd();
 
-	return GetModifiedArea(target);
+  return getModifiedArea(target);
 }
 
-Area* PointBrush::BrushEnd( const Point source, const Point target )
-{
-	// Nothing to do.
-	return NULL;
+Area* PointBrush::brushEnd(const Point source, const Point target) {
+  // Nothing to do.
+  return NULL;
 }
 

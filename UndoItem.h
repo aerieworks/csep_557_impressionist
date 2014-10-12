@@ -6,19 +6,18 @@
 #include "Area.h"
 
 class Action;
-class UndoItem 
-{
+class UndoItem {
 public:
-	UndoItem(const char* name, Area* area, GLubyte* before, GLubyte* after);
-	~UndoItem();
+  UndoItem(const char* name, Area* area, GLubyte* before, GLubyte* after);
+  ~UndoItem();
 
-	Action* GetRedoAction() const;
-	Action* GetUndoAction() const;
-	const char* GetName() const;
+  Action* getRedoAction() const;
+  Action* getUndoAction() const;
+  const char* getName() const;
 private:
-	const char* name;
-	Area* area;
-	unsigned char* before;
-	unsigned char* after;
+  const char* name;
+  Area* area;
+  unsigned char* before;
+  unsigned char* after;
 };
 #endif

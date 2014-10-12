@@ -3,11 +3,10 @@
 
 #include "../Area.h"
 
-class Action
-{
+class Action {
 public:
-	Action();
+  Action();
 
-	virtual Area* DoAction() = 0;
+  virtual Area* doAction() = 0;
 };
 #endif

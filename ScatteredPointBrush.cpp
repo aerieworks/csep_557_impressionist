@@ -1,15 +1,12 @@
 #include "ScatteredPointBrush.h"
 
 
-ScatteredPointBrush::ScatteredPointBrush(ImpressionistDoc * pDoc, char * name) :
-	PointBrush(pDoc, name), Scattered()
-{
-
+ScatteredPointBrush::ScatteredPointBrush(ImpressionistDoc * pDoc, char * name)
+  : PointBrush(pDoc, name), Scattered() {
 }
 
 
-Area* ScatteredPointBrush::BrushMove(const Point source, const Point target)
-{
-	Point scatteredTarget = Scattered::GetScatteredTarget(target);
-	return PointBrush::BrushMove(source, scatteredTarget);
+Area* ScatteredPointBrush::brushMove(const Point source, const Point target) {
+  Point scatteredTarget = Scattered::getScatteredTarget(target);
+  return PointBrush::brushMove(source, scatteredTarget);
 }

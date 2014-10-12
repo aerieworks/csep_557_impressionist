@@ -27,7 +27,7 @@ int main(int	argc,
 {
 	if (argc > 1)
 	{
-		Log::SetThreshold(argv[1]);
+		Log::setThreshold(argv[1]);
 	}
 	impDoc = new ImpressionistDoc();
 

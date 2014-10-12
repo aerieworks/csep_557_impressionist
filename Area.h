@@ -1,14 +1,13 @@
 #pragma once
 
-class Area
-{
+class Area {
 public:
-	Area(const int x, const int y, const int width, const int height);
+  Area(const int x, const int y, const int width, const int height);
 
-	int GetX() const;
-	int GetY() const;
-	int GetWidth() const;
-	int GetHeight() const;
+  int getX() const;
+  int getY() const;
+  int getWidth() const;
+  int getHeight() const;
 private:
-	const int x, y, width, height;
+  const int x, y, width, height;
 };

@@ -9,17 +9,16 @@
 
 #include "impBrush.h"
 
-class PointBrush : public ImpBrush
-{
+class PointBrush : public ImpBrush {
 public:
-	PointBrush( ImpressionistDoc* pDoc = NULL, char* name = NULL );
+  PointBrush(ImpressionistDoc* pDoc = NULL, char* name = NULL);
 
-	Area* BrushBegin( const Point source, const Point target );
-	Area* BrushMove( const Point source, const Point target );
-	Area* BrushEnd( const Point source, const Point target );
-	char* BrushName( void );
+  Area* brushBegin(const Point source, const Point target);
+  Area* brushMove(const Point source, const Point target);
+  Area* brushEnd(const Point source, const Point target);
+  char* getBrushName(void);
 private:
-	Area* GetModifiedArea(const Point target);
+  Area* getModifiedArea(const Point target);
 };
 
 #endif

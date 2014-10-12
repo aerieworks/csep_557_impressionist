@@ -6,69 +6,65 @@
 #define DEFAULT_BRUSH_DIRECTION 0
 
 BrushSettings::BrushSettings()
-	: lineWidth(DEFAULT_LINE_WIDTH),
-	  opacity(DEFAULT_OPACITY),
-	  size(DEFAULT_SIZE),
-	  brushDirection(DEFAULT_BRUSH_DIRECTION)
-{
+  : lineWidth(DEFAULT_LINE_WIDTH),
+  opacity(DEFAULT_OPACITY),
+  size(DEFAULT_SIZE),
+  brushDirection(DEFAULT_BRUSH_DIRECTION),
+  directionMode(DirectionMode::Fixed) {
 }
 
-double BrushSettings::GetLineWidthAsDouble() const
-{
-	return lineWidth;
+double BrushSettings::getLineWidthAsDouble() const {
+  return lineWidth;
 }
 
-float BrushSettings::GetLineWidthAsFloat() const
-{
-	return (float)lineWidth;
+float BrushSettings::getLineWidthAsFloat() const {
+  return (float)lineWidth;
 }
 
-void BrushSettings::SetLineWidth(const double lineWidth)
-{
-	this->lineWidth = lineWidth;
+void BrushSettings::setLineWidth(const double lineWidth) {
+  this->lineWidth = lineWidth;
 }
 
-char BrushSettings::GetOpacityAsChar() const
-{
-	return (char)opacity;
+char BrushSettings::getOpacityAsChar() const {
+  return (char)opacity;
 }
 
-double BrushSettings::GetOpacityAsDouble() const
-{
-	return opacity;
+double BrushSettings::getOpacityAsDouble() const {
+  return opacity;
 }
 
-void BrushSettings::SetOpacity(const double opacity)
-{
-	this->opacity = opacity;
+void BrushSettings::setOpacity(const double opacity) {
+  this->opacity = opacity;
 }
 
-int BrushSettings::GetSizeAsInteger() const
-{
-	return size;
+int BrushSettings::getSizeAsInteger() const {
+  return size;
 }
 
-double BrushSettings::GetSizeAsDouble() const
-{
-	return (double)size;
+double BrushSettings::getSizeAsDouble() const {
+  return (double)size;
 }
 
-float BrushSettings::GetSizeAsFloat() const
-{
-	return (float)size;
+float BrushSettings::getSizeAsFloat() const {
+  return (float)size;
 }
 
-void BrushSettings::SetSize(const int size)
-{
-	this->size = size;
+void BrushSettings::setSize(const int size) {
+  this->size = size;
 }
 
-double BrushSettings::GetBrushDirectionAsDouble() const
-{
-	return brushDirection;
+double BrushSettings::getBrushDirectionAsDouble() const {
+  return brushDirection;
 }
 
-void BrushSettings::SetBrushDirection(const double brushDirection)
-{
-	this->brushDirection = brushDirection;
+void BrushSettings::setBrushDirection(const double brushDirection) {
+  this->brushDirection = brushDirection;
+}
+
+DirectionMode BrushSettings::getBrushDirectionMode() const {
+  return directionMode;
+}
+
+void BrushSettings::setBrushDirectionMode(const DirectionMode directionMode) {
+  this->directionMode = directionMode;
 }

@@ -1,15 +1,14 @@
 #include "impBrush.h"
 
 #pragma once
-class Scattered
-{
+class Scattered {
 public:
-	Scattered();
+  Scattered();
 
 protected:
-	Point GetScatteredTarget(const Point originalTarget) const;
+  Point getScatteredTarget(const Point originalTarget) const;
 
 private:
-	int AddRandomOffset(const int initialValue) const;
+  int addRandomOffset(const int initialValue) const;
 };
 

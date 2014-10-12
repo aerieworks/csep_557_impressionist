@@ -3,29 +3,24 @@
 #include "actions/DrawPixelsAction.h"
 
 UndoItem::UndoItem(const char* name, Area* area, GLubyte* before, GLubyte* after)
-	: name(name), area(area), before(before), after(after)
-{
+  : name(name), area(area), before(before), after(after) {
 }
 
-UndoItem::~UndoItem()
-{
-	Log::Debug << "Deleting UndoItem " << GetName() << ": (" << area->GetX() << ", " << area->GetY() << ")" << Log::end;
-	delete area;
-	delete[] before;
-	delete[] after;
+UndoItem::~UndoItem() {
+  Log::Debug << "Deleting UndoItem " << getName() << ": (" << area->getX() << ", " << area->getY() << ")" << Log::end;
+  delete area;
+  delete[] before;
+  delete[] after;
 }
 
-Action* UndoItem::GetRedoAction() const
-{
-	return new DrawPixelsAction(area, after);
+Action* UndoItem::getRedoAction() const {
+  return new DrawPixelsAction(area, after);
 }
 
-Action* UndoItem::GetUndoAction() const
-{
-	return new DrawPixelsAction(area, before);
+Action* UndoItem::getUndoAction() const {
+  return new DrawPixelsAction(area, before);
 }
 
-const char* UndoItem::GetName() const
-{
-	return name;
+const char* UndoItem::getName() const {
+  return name;
 }

@@ -6,67 +6,59 @@
 #include "Area.h"
 
 enum LogLevel {
-	Debug,
-	Info,
-	Warn,
-	Error
+  Debug,
+  Info,
+  Warn,
+  Error
 };
 
-class Log
-{
+class Log {
 private:
-	Log();
+  Log();
 
-	static LogLevel threshold;
+  static LogLevel threshold;
 
-	class LogSignal
-	{
-	public:
-		LogSignal() {}
-	};
+  class LogSignal {
+  public:
+    LogSignal() {}
+  };
 
-	class LogStream
-	{
-	public:
-		LogStream(const LogLevel threshold)
-			: threshold(threshold)
-		{
+  class LogStream {
+  public:
+    LogStream(const LogLevel threshold)
+      : threshold(threshold) {
 
-		}
+    }
 
-		template <class T>
-		LogStream& operator<<(const T& message)
-		{
-			if (this->threshold <= Log::threshold)
-			{
-				std::cerr << message;
-			}
-			return *this;
-		}
+    template <class T>
+    LogStream& operator<<(const T& message) {
+      if (this->threshold <= Log::threshold) {
+        std::cerr << message;
+      }
+      return *this;
+    }
 
-		template<>
-		LogStream& operator<<(const LogSignal& signal)
-		{
+    template<>
+    LogStream& operator<<(const LogSignal& signal) {
 
-			if (this->threshold <= Log::threshold)
-			{
-				std::cerr << std::endl;
-			}
-			return *this;
-		}
-	private:
-		const LogLevel threshold;
-	};
+      if (this->threshold <= Log::threshold) {
+        std::cerr << std::endl;
+      }
+      return *this;
+    }
+  private:
+    const LogLevel threshold;
+  };
 
 public:
-	static void SetThreshold(const LogLevel threshold);
-	static void SetThreshold(const char* thresholdName);
-	static void PrintPixels(const char* message, const Area* area, const GLubyte* content, const int channels);
+  static void setThreshold(const LogLevel threshold);
+  static void setThreshold(const char* thresholdName);
+  static void printPixels(const char* message, const Area* area, const GLubyte* content, const int channels);
 
-	static LogStream Debug;
-	static LogStream Info;
-	static LogStream Warn;
-	static LogStream Error;
+  static LogStream Debug;
+  static LogStream Info;
+  static LogStream Warn;
+  static LogStream Error;
 
-	static const LogSignal end;
+  static const LogSignal end;
 };
