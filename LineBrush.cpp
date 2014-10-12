@@ -22,7 +22,7 @@ double LineBrush::calculateDirection(const Point source) {
   } else {
     const double xGradient = sobelOperatorX->evaluateAt(getDocument()->m_ucLuminance, source.x, source.y, getDocument()->m_nPaintWidth, getDocument()->m_nPaintHeight, 1);
     const double yGradient = sobelOperatorY->evaluateAt(getDocument()->m_ucLuminance, source.x, source.y, getDocument()->m_nPaintWidth, getDocument()->m_nPaintHeight, 1);
-    const double angle = 180 * atan2(yGradient, xGradient) / PI;
+    const double angle = 180 * (atan2(yGradient, xGradient) + 90) / PI;
     Log::Debug << "Gradient at (" << source.x << ", " << source.y << "): " << xGradient << " x " << yGradient << ": " << angle << Log::end;
     return angle;
   }
