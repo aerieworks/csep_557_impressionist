@@ -6,6 +6,7 @@
 
 #include "impressionist.h"
 #include "impressionistDoc.h"
+#include "impressionistUI.h"
 #include "originalView.h"
 
 #ifndef WIN32
@@ -79,8 +80,14 @@ void OriginalView::draw()
 #endif
 		glDrawPixels( drawWidth, drawHeight, GL_RGB, GL_UNSIGNED_BYTE, bitstart );
 
+    const Point position = m_pDoc->m_pUI->getSourcePosition();
+    glPointSize(2);
+    glBegin(GL_POINTS); {
+      glColor3ub(255, 0, 0);
+      glVertex2d(position.x, position.y);
+    } glEnd();
 	}
-			
+    
 	glFlush();
 }
 

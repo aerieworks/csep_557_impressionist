@@ -40,6 +40,7 @@ public:
 
 private:
   void addUndoFor(Area* invalidatedArea);
+  void updateMousePosition();
 
   GLvoid* m_pPaintBitstart;
   Action* m_actionToDo;

@@ -65,6 +65,9 @@ public:
   void				show();
   void				resize_windows(int w, int h);
   void        updateUndoRedoMenus();
+  void        setCursorPosition(const Point sourcePosition, const Point targetPosition);
+  Point       getSourcePosition() const;
+  Point       getTargetPosition() const;
 
   // Callbacks for the image filter dialogue (different from
   // the other callbacks because they aren't static)
@@ -83,6 +86,9 @@ private:
   ImpressionistDoc*	m_pDoc;		// pointer to document to communicate with the document
 
   KernelFilter filter;
+
+  Point sourcePosition;
+  Point targetPosition;
 
   // Static class members
   static Fl_Menu_Item		menuitems[];

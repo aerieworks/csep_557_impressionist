@@ -147,12 +147,7 @@ void PaintView::draw() {
 
 }
 
-void PaintView::handleAction(Action* action) {
-  m_actionToDo = action;
-  redraw();
-}
-
-int PaintView::handle(int event) {
+void PaintView::updateMousePosition() {
   Point scrollPos;// = GetScrollPosition();
   scrollPos.x = 0;
   scrollPos.y = 0;
@@ -161,29 +156,39 @@ int PaintView::handle(int event) {
   const int drawHeight = min(windowHeight, m_pDoc->m_nPaintHeight);
   const int startRow = max(0, m_pDoc->m_nPaintHeight - (scrollPos.y + drawHeight));
   const int endRow = startRow + drawHeight;
-  const int startCol = scrollPos.x;
 
-  Point mousePos = Point(Fl::event_x(), Fl::event_y());
+  Point mousePos(Fl::event_x(), Fl::event_y());
   Point source(mousePos.x + scrollPos.x, endRow - mousePos.y);
   Point target(mousePos.x, windowHeight - mousePos.y);
+  m_pDoc->m_pUI->setCursorPosition(source, target);
+}
+
+void PaintView::handleAction(Action* action) {
+  m_actionToDo = action;
+  redraw();
+}
+
+int PaintView::handle(int event) {
 
   switch (event) {
   case FL_ENTER:
-    //redraw();
+  case FL_MOVE:
+    updateMousePosition();
     break;
   case FL_PUSH:
     if (Fl::event_button() == 1) {
-      handleAction(new BrushBeginAction(m_pDoc->m_pCurrentBrush, source, target));
+      handleAction(new BrushBeginAction(m_pDoc->m_pCurrentBrush, m_pDoc->m_pUI->getSourcePosition(), m_pDoc->m_pUI->getTargetPosition()));
     }
     break;
   case FL_DRAG:
+    updateMousePosition();
     if (Fl::event_button() == 1) {
-      handleAction(new BrushMoveAction(m_pDoc->m_pCurrentBrush, source, target));
+      handleAction(new BrushMoveAction(m_pDoc->m_pCurrentBrush, m_pDoc->m_pUI->getSourcePosition(), m_pDoc->m_pUI->getTargetPosition()));
     }
     break;
   case FL_RELEASE:
     if (Fl::event_button() == 1) {
-      handleAction(new BrushEndAction(m_pDoc->m_pCurrentBrush, source, target));
+      handleAction(new BrushEndAction(m_pDoc->m_pCurrentBrush, m_pDoc->m_pUI->getSourcePosition(), m_pDoc->m_pUI->getTargetPosition()));
       saveCurrentContent();
       restoreContent();
     }
@@ -193,8 +198,6 @@ int PaintView::handle(int event) {
     break;
 
   }
-
-
 
   return 1;
 }

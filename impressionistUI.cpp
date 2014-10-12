@@ -731,3 +731,17 @@ void ImpressionistUI::updateUndoRedoMenus() {
     m_redoMenuItem->deactivate();
   }
 }
+
+void ImpressionistUI::setCursorPosition(const Point sourcePosition, const Point targetPosition) {
+  this->sourcePosition = sourcePosition;
+  this->targetPosition = targetPosition;
+  m_origView->redraw();
+}
+
+Point ImpressionistUI::getSourcePosition() const {
+  return sourcePosition;
+}
+
+Point ImpressionistUI::getTargetPosition() const {
+  return targetPosition;
+}
