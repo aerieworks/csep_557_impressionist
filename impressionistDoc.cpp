@@ -63,8 +63,17 @@ ImpressionistDoc::ImpressionistDoc() {
 
 ImpressionistDoc::~ImpressionistDoc() {
   // Empty and deallocate the undo and redo stacks.
-  clearStack(m_undoStack);
-  clearStack(m_redoStack);
+  while (!m_undoStack.empty()) {
+    UndoItem* item = m_undoStack.front();
+    delete item;
+    m_undoStack.pop_front();
+  }
+
+  while (!m_redoStack.empty()) {
+    UndoItem* item = m_redoStack.top();
+    delete item;
+    m_redoStack.pop();
+  }
 }
 
 //---------------------------------------------------------
@@ -218,21 +227,25 @@ GLubyte* ImpressionistDoc::getOriginalPixel(const Point p) {
 }
 
 
-void ImpressionistDoc::clearStack(std::stack<UndoItem*>& st) {
-  while (!st.empty()) {
-    UndoItem* item = st.top();
-    delete item;
-    st.pop();
-  }
-}
-
 //----------------------------------------------------------------
 // Performs the action and adds it to the undo queue.
 //----------------------------------------------------------------
 void ImpressionistDoc::addUndoItem(UndoItem* item) {
-  m_undoStack.push(item);
+  // Maintain a maximum undo limit.
+  if (m_undoStack.size() > 40) {
+    UndoItem* item = m_undoStack.back();
+    delete item;
+    m_undoStack.pop_back();
+  }
+
+  m_undoStack.push_front(item);
   // Clear the redo stack when new actions are performed.
-  clearStack(m_redoStack);
+  while (!m_redoStack.empty()) {
+    UndoItem* item = m_redoStack.top();
+    delete item;
+    m_redoStack.pop();
+  }
+
   m_pUI->updateUndoRedoMenus();
 }
 
@@ -255,11 +268,13 @@ bool ImpressionistDoc::canRedo() const {
 //----------------------------------------------------------------
 void ImpressionistDoc::undo() {
   if (canUndo()) {
-    UndoItem* item = m_undoStack.top();
+    UndoItem* item = m_undoStack.front();
     Log::Debug << "Doc: Undoing " << item->getName() << Log::end;
     m_pUI->m_paintView->handleAction(item->getUndoAction());
     m_redoStack.push(item);
-    m_undoStack.pop();
+    m_pUI->m_paintView->saveCurrentContent();
+    m_pUI->m_paintView->restoreContent();
+    m_undoStack.pop_front();
     m_pUI->updateUndoRedoMenus();
   } else {
     Log::Debug << "Nothing to undo." << Log::end;
@@ -274,7 +289,8 @@ void ImpressionistDoc::redo() {
     UndoItem* item = m_redoStack.top();
     Log::Debug << "Doc: Redoing " << item->getName() << Log::end;
     m_pUI->m_paintView->handleAction(item->getRedoAction());
-    m_undoStack.push(item);
+    // No need to check undo stack size here, because the action we just redid had to have just been undone.
+    m_undoStack.push_front(item);
     m_redoStack.pop();
     m_pUI->updateUndoRedoMenus();
   } else {

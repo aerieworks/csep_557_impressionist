@@ -7,6 +7,7 @@
 #ifndef ImpressionistDoc_h
 #define ImpressionistDoc_h
 
+#include <deque>
 #include <stack>
 
 #include "impressionist.h"
@@ -89,10 +90,8 @@ public:
 
 private:
   unsigned char* calculateLuminance(const unsigned char* source);
-  void updateUndoRedoMenus();
-  void				clearStack(std::stack<UndoItem*>& s);
   char				m_imageName[256];
-  std::stack<UndoItem*>	m_undoStack;
+  std::deque<UndoItem*>	m_undoStack;
   std::stack<UndoItem*>	m_redoStack;
 };
 
