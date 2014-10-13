@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <vector>
 #include "Area.h"
+#include "Log.h"
 #include "viewModels/BrushSettings.h"
 
 // Each brush type has an associated constant.
@@ -45,6 +46,7 @@ protected:
       : settings(settings), source(source), target(target) { }
 
     ~BrushStrokePart() {
+      Log::Debug << "Deleting stroke part." << Log::end;
       delete settings;
     }
 

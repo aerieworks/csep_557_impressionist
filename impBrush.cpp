@@ -14,6 +14,7 @@ int			ImpBrush::c_nBrushCount = 0;
 ImpBrush**	ImpBrush::c_pBrushes = NULL;
 
 ImpBrush::BrushStroke::~BrushStroke() {
+  Log::Debug << "Deleting stroke." << Log::end;
   for (BrushStrokePart* part : parts) {
     delete part;
   }

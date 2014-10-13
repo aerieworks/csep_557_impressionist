@@ -28,8 +28,6 @@
 #define max(a, b)	( ( (a)>(b) ) ? (a) : (b) )
 #endif
 
-static bool shouldSave = false;
-
 PaintView::PaintView(int			x,
   int			y,
   int			w,
@@ -40,6 +38,8 @@ PaintView::PaintView(int			x,
   m_nWindowHeight = h;
   m_actionToDo = NULL;
   m_brushStroke = NULL;
+  m_shouldSave = false;
+  m_shouldDeleteAction = false;
 }
 
 
@@ -121,14 +121,18 @@ void PaintView::draw() {
 
 
 
-  shouldSave = false;
+  m_shouldSave = false;
   if (m_pDoc->m_ucPainting && m_actionToDo) {
 #ifndef _WIN32
     restoreContent();
 #endif
 
     Log::Debug << "Running action." << Log::end;
-    shouldSave = m_actionToDo->doAction();
+    m_shouldSave = m_actionToDo->doAction();
+    if (m_shouldDeleteAction) {
+      delete m_actionToDo;
+      m_shouldDeleteAction = false;
+    }
     m_actionToDo = NULL;
 
 #ifndef _WIN32
@@ -150,10 +154,10 @@ void PaintView::draw() {
 
 void PaintView::flush() {
   Fl_Gl_Window::flush();
-  if (shouldSave) {
+  if (m_shouldSave) {
     saveCurrentContent();
     restoreContent();
-    shouldSave = false;
+    m_shouldSave = false;
   }
 }
 
@@ -175,7 +179,12 @@ void PaintView::updateMousePosition() {
 }
 
 void PaintView::handleAction(Action* action) {
+  handleAction(action, true);
+}
+
+void PaintView::handleAction(Action* action, const bool deleteWhenDone) {
   m_actionToDo = action;
+  m_shouldDeleteAction = deleteWhenDone;
   redraw();
 }
 

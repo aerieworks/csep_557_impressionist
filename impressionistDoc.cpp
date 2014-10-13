@@ -232,6 +232,12 @@ GLubyte* ImpressionistDoc::getOriginalPixel(const Point p) {
 // Adds the action to the undo queue.
 //----------------------------------------------------------------
 void ImpressionistDoc::addUndoItem(UndoableAction* action) {
+  if (m_undoStack.size() == 10) {
+    UndoableAction* action = m_undoStack.back();
+    delete action;
+    m_undoStack.pop_back();
+  }
+
   m_undoStack.push_front(action);
   while (!m_redoStack.empty()) {
     UndoableAction* action = m_redoStack.top();
@@ -282,7 +288,7 @@ void ImpressionistDoc::undo() {
 void ImpressionistDoc::redo() {
   if (canRedo()) {
     UndoableAction* action = m_redoStack.top();
-    m_pUI->m_paintView->handleAction(action);
+    m_pUI->m_paintView->handleAction(action, false);
     m_undoStack.push_front(action);
     m_redoStack.pop();
     m_pUI->updateUndoRedoMenus();
