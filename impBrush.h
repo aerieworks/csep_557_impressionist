@@ -67,6 +67,8 @@ public:
     void addPart(BrushSettings* settings, const Point source, const Point target);
     virtual void resolveSettings(BrushSettings* settings, const Point source) const;
     virtual void doPaint(const BrushSettings* settings, const Point source, const Point target) = 0;
+    virtual double getRandomOffset(const double min, const double max) const;
+
 
     const BrushSettings* settings;
     ImpressionistDoc* const doc;

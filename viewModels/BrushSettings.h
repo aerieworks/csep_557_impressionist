@@ -6,7 +6,8 @@ enum ColorMode {
 
 enum DirectionMode {
   FixedDirection,
-  Gradient
+  Gradient,
+  Random
 };
 
 class BrushSettings {
@@ -16,6 +17,10 @@ class BrushSettings {
 	double opacity;
 	int size;
 	double brushDirection;
+  double scatterMinSize;
+  double scatterMaxSize;
+  int scatterMinCount;
+  int scatterMaxCount;
   DirectionMode directionMode;
 
 public:
@@ -46,5 +51,15 @@ public:
 
   DirectionMode getBrushDirectionMode() const;
   void setBrushDirectionMode(const DirectionMode directionMode);
+
+  double getScatterMinSizeAsDouble() const;
+  void setScatterMinSize(const double size);
+  double getScatterMaxSizeAsDouble() const;
+  void setScatterMaxSize(const double size);
+
+  int getScatterMinCountAsInteger() const;
+  void setScatterMinCount(const int count);
+  int getScatterMaxCountAsInteger() const;
+  void setScatterMaxCount(const int count);
 };
 

@@ -16,7 +16,11 @@ void LineBrush::LineBrushStroke::resolveSettings(BrushSettings* settings, const 
   if (settings->getBrushDirectionMode() == DirectionMode::Gradient) {
     settings->setBrushDirection(calculateDirection(source));
     settings->setBrushDirectionMode(DirectionMode::FixedDirection);
+  } else if (settings->getBrushDirectionMode() == DirectionMode::Random) {
+    settings->setBrushDirection(getRandomOffset(0, 360));
+    settings->setBrushDirectionMode(DirectionMode::Random);
   }
+
   BrushStroke::resolveSettings(settings, source);
 }
 

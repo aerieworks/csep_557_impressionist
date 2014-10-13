@@ -4,6 +4,7 @@
 // The implementation of virtual brush. All the other brushes inherit from it.
 //
 
+#include <random>
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
 #include "impBrush.h"
@@ -46,6 +47,11 @@ void ImpBrush::BrushStroke::resolveSettings(BrushSettings* settings, const Point
 void ImpBrush::BrushStroke::addPart(BrushSettings* settings, const Point source, const Point target) {
   parts.push_back(new ImpBrush::BrushStrokePart(settings, source, target));
   doPaint(settings, source, target);
+}
+
+double ImpBrush::BrushStroke::getRandomOffset(const double min, const double max) const {
+  const double offsetPercentage = (double)rand() / (double)RAND_MAX;
+  return min + (max - min) * offsetPercentage;
 }
 
 ImpBrush::ImpBrush(ImpressionistDoc*	pDoc,

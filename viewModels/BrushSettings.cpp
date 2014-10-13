@@ -1,18 +1,17 @@
 #include <string>
 #include "BrushSettings.h"
 
-#define DEFAULT_LINE_WIDTH 1
-#define DEFAULT_OPACITY 255
-#define DEFAULT_SIZE 20
-#define DEFAULT_BRUSH_DIRECTION 0
-
 BrushSettings::BrushSettings()
   : colorMode(ColorMode::FromSource),
-    lineWidth(DEFAULT_LINE_WIDTH),
-    opacity(DEFAULT_OPACITY),
-    size(DEFAULT_SIZE),
-    brushDirection(DEFAULT_BRUSH_DIRECTION),
-    directionMode(DirectionMode::FixedDirection) {
+    lineWidth(1),
+    opacity(255),
+    size(20),
+    brushDirection(0),
+    directionMode(DirectionMode::FixedDirection),
+    scatterMinSize(1),
+    scatterMaxSize(5),
+    scatterMinCount(3),
+    scatterMaxCount(8) {
   color[0] = 0;
   color[1] = 0;
   color[2] = 0;
@@ -25,7 +24,11 @@ BrushSettings::BrushSettings(const BrushSettings& settings)
     opacity(settings.opacity),
     size(settings.size),
     brushDirection(settings.brushDirection),
-    directionMode(settings.directionMode) {
+    directionMode(settings.directionMode),
+    scatterMinSize(settings.scatterMinSize),
+    scatterMaxSize(settings.scatterMaxSize),
+    scatterMinCount(settings.scatterMinCount),
+    scatterMaxCount(settings.scatterMaxCount) {
   setColor(settings.color);
 }
 
@@ -99,4 +102,35 @@ DirectionMode BrushSettings::getBrushDirectionMode() const {
 
 void BrushSettings::setBrushDirectionMode(const DirectionMode directionMode) {
   this->directionMode = directionMode;
+}
+
+double BrushSettings::getScatterMinSizeAsDouble() const {
+  return scatterMinSize;
+}
+
+void BrushSettings::setScatterMinSize(const double size) {
+  this->scatterMinSize = size;
+}
+
+double BrushSettings::getScatterMaxSizeAsDouble() const {
+  return scatterMaxSize;
+}
+
+void BrushSettings::setScatterMaxSize(const double size) {
+  this->scatterMaxSize = size;
+}
+
+int BrushSettings::getScatterMinCountAsInteger() const {
+  return scatterMinCount;
+}
+void BrushSettings::setScatterMinCount(const int count) {
+  this->scatterMinCount = count;
+}
+
+int BrushSettings::getScatterMaxCountAsInteger() const {
+  return scatterMaxCount;
+}
+
+void BrushSettings::setScatterMaxCount(const int count) {
+  this->scatterMaxCount = count;
 }

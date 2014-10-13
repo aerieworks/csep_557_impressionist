@@ -56,6 +56,11 @@ public:
   Fl_Group*       m_brushDirectionGroup;
   Fl_Choice*      m_directionModeChoice;
   Fl_Slider*			m_BrushDirectionSlider;
+  Fl_Group*       m_scatterGroup;
+  Fl_Slider*      m_scatterMinSizeSlider;
+  Fl_Slider*      m_scatterMaxSizeSlider;
+  Fl_Slider*      m_scatterMinCountSlider;
+  Fl_Slider*      m_scatterMaxCountSlider;
   Fl_Button*      m_ClearCanvasButton;
 
   // Member functions
@@ -93,7 +98,7 @@ private:
   // Static class members
   static Fl_Menu_Item		menuitems[];
   static Fl_Menu_Item		brushTypeMenu[NUM_BRUSH_TYPE + 1];
-  static Fl_Menu_Item   directionModeMenu[3];
+  static Fl_Menu_Item   directionModeMenu[4];
 
   static ImpressionistUI*	whoami(Fl_Menu_* o);
   static ImpressionistUI* whoami(Fl_Widget* o);
@@ -116,6 +121,10 @@ private:
   static void cb_lineWidthSlides(Fl_Widget* o, void* v);
   static void	cb_directionModeChoice(Fl_Widget* o, void* v);
   static void cb_brushDirectionSlides(Fl_Widget* o, void* v);
+  static void cb_scatterMinSizeSlides(Fl_Widget* o, void* v);
+  static void cb_scatterMaxSizeSlides(Fl_Widget* o, void* v);
+  static void cb_scatterMinCountSlides(Fl_Widget* o, void* v);
+  static void cb_scatterMaxCountSlides(Fl_Widget* o, void* v);
 };
 
 #endif

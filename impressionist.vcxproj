@@ -225,7 +225,6 @@
     <ClCompile Include="originalView.cpp" />
     <ClCompile Include="paintView.cpp" />
     <ClCompile Include="pointBrush.cpp" />
-    <ClCompile Include="Scattered.cpp" />
     <ClCompile Include="ScatteredCircleBrush.cpp" />
     <ClCompile Include="ScatteredLineBrush.cpp" />
     <ClCompile Include="ScatteredPointBrush.cpp" />
@@ -255,7 +254,6 @@
     <ClInclude Include="originalView.h" />
     <ClInclude Include="paintView.h" />
     <ClInclude Include="pointBrush.h" />
-    <ClInclude Include="Scattered.h" />
     <ClInclude Include="ScatteredCircleBrush.h" />
     <ClInclude Include="ScatteredLineBrush.h" />
     <ClInclude Include="ScatteredPointBrush.h" />

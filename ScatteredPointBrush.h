@@ -1,6 +1,5 @@
 #pragma once
 #include "pointBrush.h"
-#include "Scattered.h"
 
 class ScatteredPointBrush : public PointBrush {
 public:
@@ -8,10 +7,10 @@ public:
 
   virtual BrushStroke* createStroke();
 protected:
-  class ScatteredPointBrushStroke : public PointBrush::PointBrushStroke, Scattered {
+  class ScatteredPointBrushStroke : public PointBrush::PointBrushStroke {
   public:
     ScatteredPointBrushStroke(ImpressionistDoc* const doc, const BrushSettings* settings)
-      : PointBrushStroke(doc, settings), Scattered() {}
+      : PointBrushStroke(doc, settings) {}
 
     virtual void resolveSettings(BrushSettings* settings, const Point source) const;
     virtual void paint(const Point source, const Point target);

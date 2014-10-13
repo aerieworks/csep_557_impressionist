@@ -9,6 +9,8 @@
 
 #include <stdio.h>
 #include <iostream>
+#include <random>
+#include <time.h>
 
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
@@ -29,6 +31,7 @@ int main(int	argc,
 	{
 		Log::setThreshold(argv[1]);
 	}
+  srand(time(0));
 	impDoc = new ImpressionistDoc();
 
 	// Create the UI

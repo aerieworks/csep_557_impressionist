@@ -396,6 +396,26 @@ void ImpressionistUI::cb_sizeSlides(Fl_Widget* o, void* v) {
   whoami(o)->getCurrentBrushSettings()->setSize(newSize);
 }
 
+void ImpressionistUI::cb_scatterMinSizeSlides(Fl_Widget* o, void* v) {
+  const int newSize = int(((Fl_Slider*)o)->value());
+  whoami(o)->getCurrentBrushSettings()->setScatterMinSize(newSize);
+}
+
+void ImpressionistUI::cb_scatterMaxSizeSlides(Fl_Widget* o, void* v) {
+  const int newSize = int(((Fl_Slider*)o)->value());
+  whoami(o)->getCurrentBrushSettings()->setScatterMaxSize(newSize);
+}
+
+void ImpressionistUI::cb_scatterMinCountSlides(Fl_Widget* o, void* v) {
+  const int newCount = int(((Fl_Slider*)o)->value());
+  whoami(o)->getCurrentBrushSettings()->setScatterMinCount(newCount);
+}
+
+void ImpressionistUI::cb_scatterMaxCountSlides(Fl_Widget* o, void* v) {
+  const int newCount = int(((Fl_Slider*)o)->value());
+  whoami(o)->getCurrentBrushSettings()->setScatterMaxCount(newCount);
+}
+
 //---------------------------------- per instance functions --------------------------------------
 
 //------------------------------------------------
@@ -539,9 +559,10 @@ Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE + 1] = {
 };
 
 // Direction mode menu definition
-Fl_Menu_Item ImpressionistUI::directionModeMenu[3] = {
+Fl_Menu_Item ImpressionistUI::directionModeMenu[4] = {
     { "Fixed", FL_ALT + 'f', (Fl_Callback *)ImpressionistUI::cb_directionModeChoice, (void *)DirectionMode::FixedDirection },
     { "Gradient", FL_ALT + 'g', (Fl_Callback *)ImpressionistUI::cb_directionModeChoice, (void *)DirectionMode::Gradient },
+    { "Random", FL_ALT + 'r', (Fl_Callback *)ImpressionistUI::cb_directionModeChoice, (void *)DirectionMode::Random },
     { 0 }
 };
 
@@ -586,7 +607,7 @@ ImpressionistUI::ImpressionistUI()
   initFltDesignUI();
 
   // brush dialog definition
-  m_brushDialog = new Fl_Window(400, 325, "Brush Dialog");
+  m_brushDialog = new Fl_Window(400, 360, "Brush Dialog");
   // Add a brush type choice to the dialog
   m_BrushTypeChoice = new Fl_Choice(50, 10, 150, 25, "&Brush");
   m_BrushTypeChoice->user_data((void*)(this));	// record self to be used by static callback functions
@@ -607,7 +628,7 @@ ImpressionistUI::ImpressionistUI()
   m_BrushSizeSlider->minimum(1);
   m_BrushSizeSlider->maximum(40);
   m_BrushSizeSlider->step(1);
-  m_BrushSizeSlider->value(0);
+  m_BrushSizeSlider->value(1);
   m_BrushSizeSlider->align(FL_ALIGN_RIGHT);
   m_BrushSizeSlider->callback(cb_sizeSlides);
 
@@ -637,24 +658,74 @@ ImpressionistUI::ImpressionistUI()
   m_BrushLineWidthSlider->callback(cb_lineWidthSlides);
 
   // Add brush direction controls to the dialog
-  m_brushDirectionGroup = new Fl_Group(10, 240, 370, 45, "Brush Direction");
+  m_brushDirectionGroup = new Fl_Group(10, 200, 370, 45, "Brush Direction");
   m_brushDirectionGroup->box(FL_ENGRAVED_FRAME);
-  m_directionModeChoice = new Fl_Choice(20, 250, 100, 25);
+  m_directionModeChoice = new Fl_Choice(20, 210, 100, 25);
   m_directionModeChoice->user_data((void*)(this));
   m_directionModeChoice->menu(directionModeMenu);
   m_directionModeChoice->callback(cb_directionModeChoice);
-  m_BrushDirectionSlider = new Fl_Value_Slider(125, 253, 245, 20);
+  m_BrushDirectionSlider = new Fl_Value_Slider(125, 213, 245, 20);
   m_BrushDirectionSlider->user_data((void*)this);
   m_BrushDirectionSlider->type(FL_HOR_NICE_SLIDER);
   m_BrushDirectionSlider->labelfont(FL_COURIER);
   m_BrushDirectionSlider->labelsize(12);
   m_BrushDirectionSlider->minimum(0);
   m_BrushDirectionSlider->maximum(360);
-  m_BrushDirectionSlider->value(0);
+  m_BrushDirectionSlider->step(1);
+  m_BrushDirectionSlider->value(1);
   m_BrushDirectionSlider->align(FL_ALIGN_RIGHT);
   m_BrushDirectionSlider->callback(cb_brushDirectionSlides);
   m_brushDirectionGroup->end();
 
+  // Add scatter controls to the dialog
+  m_scatterGroup = new Fl_Group(10, 265, 370, 75, "Scatter Settings");
+  m_scatterGroup->box(FL_ENGRAVED_FRAME);
+  m_scatterMinSizeSlider = new Fl_Value_Slider(20, 275, 100, 20, "Min Size");
+  m_scatterMinSizeSlider->user_data((void*)this);
+  m_scatterMinSizeSlider->type(FL_HOR_NICE_SLIDER);
+  m_scatterMinSizeSlider->labelfont(FL_COURIER);
+  m_scatterMinSizeSlider->labelsize(12);
+  m_scatterMinSizeSlider->minimum(0);
+  m_scatterMinSizeSlider->maximum(40);
+  m_scatterMinSizeSlider->step(1);
+  m_scatterMinSizeSlider->value(1);
+  m_scatterMinSizeSlider->align(FL_ALIGN_RIGHT);
+  m_scatterMinSizeSlider->callback(cb_scatterMinSizeSlides);
+  m_scatterMaxSizeSlider = new Fl_Value_Slider(210, 275, 100, 20, "Max Size");
+  m_scatterMaxSizeSlider->user_data((void*)this);
+  m_scatterMaxSizeSlider->type(FL_HOR_NICE_SLIDER);
+  m_scatterMaxSizeSlider->labelfont(FL_COURIER);
+  m_scatterMaxSizeSlider->labelsize(12);
+  m_scatterMaxSizeSlider->minimum(0);
+  m_scatterMaxSizeSlider->maximum(40);
+  m_scatterMaxSizeSlider->step(1);
+  m_scatterMaxSizeSlider->value(1);
+  m_scatterMaxSizeSlider->align(FL_ALIGN_RIGHT);
+  m_scatterMaxSizeSlider->callback(cb_scatterMaxSizeSlides);
+
+  m_scatterMinCountSlider = new Fl_Value_Slider(20, 305, 100, 20, "Min Count");
+  m_scatterMinCountSlider->user_data((void*)this);
+  m_scatterMinCountSlider->type(FL_HOR_NICE_SLIDER);
+  m_scatterMinCountSlider->labelfont(FL_COURIER);
+  m_scatterMinCountSlider->labelsize(12);
+  m_scatterMinCountSlider->minimum(0);
+  m_scatterMinCountSlider->maximum(40);
+  m_scatterMinCountSlider->step(1);
+  m_scatterMinCountSlider->value(1);
+  m_scatterMinCountSlider->align(FL_ALIGN_RIGHT);
+  m_scatterMinCountSlider->callback(cb_scatterMinCountSlides);
+  m_scatterMaxCountSlider = new Fl_Value_Slider(210, 305, 100, 20, "Max Count");
+  m_scatterMaxCountSlider->user_data((void*)this);
+  m_scatterMaxCountSlider->type(FL_HOR_NICE_SLIDER);
+  m_scatterMaxCountSlider->labelfont(FL_COURIER);
+  m_scatterMaxCountSlider->labelsize(12);
+  m_scatterMaxCountSlider->minimum(0);
+  m_scatterMaxCountSlider->maximum(40);
+  m_scatterMaxCountSlider->step(1);
+  m_scatterMaxCountSlider->value(1);
+  m_scatterMaxCountSlider->align(FL_ALIGN_RIGHT);
+  m_scatterMaxCountSlider->callback(cb_scatterMaxCountSlides);
+  m_scatterGroup->end();
   m_brushDialog->end();
 
 }
@@ -696,25 +767,36 @@ void ImpressionistUI::updateBrushControls() {
   m_BrushLineWidthSlider->value(getCurrentBrushSettings()->getLineWidthAsDouble());
   m_BrushOpacitySlider->value(getCurrentBrushSettings()->getOpacityAsDouble());
   m_BrushSizeSlider->value(getCurrentBrushSettings()->getSizeAsDouble());
+  m_scatterMinSizeSlider->value(getCurrentBrushSettings()->getScatterMinSizeAsDouble());
+  m_scatterMaxSizeSlider->value(getCurrentBrushSettings()->getScatterMaxSizeAsDouble());
+  m_scatterMinCountSlider->value(getCurrentBrushSettings()->getScatterMinCountAsInteger());
+  m_scatterMaxCountSlider->value(getCurrentBrushSettings()->getScatterMaxCountAsInteger());
 
   const ImpBrush* currentBrush = getDocument()->m_pCurrentBrush;
   if (currentBrush == ImpBrush::c_pBrushes[BRUSH_LINES]
-    || currentBrush == ImpBrush::c_pBrushes[BRUSH_SCATTERED_LINES]) {
-    Log::Debug << "Updating brush settings." << Log::end;
-    m_brushDirectionGroup->show();
+      || currentBrush == ImpBrush::c_pBrushes[BRUSH_SCATTERED_LINES]) {
+    m_brushDirectionGroup->activate();
     if (getCurrentBrushSettings()->getBrushDirectionMode() == DirectionMode::FixedDirection) {
-      Log::Debug << "Should show direction slider for Fixed." << Log::end;
-      m_BrushDirectionSlider->show();
+      m_BrushDirectionSlider->activate();
     } else {
-      Log::Debug << "Should not show direction slider for Gradient." << Log::end;
-      m_BrushDirectionSlider->hide();
+      m_BrushDirectionSlider->deactivate();
     }
 
-    m_BrushLineWidthSlider->show();
+    m_BrushLineWidthSlider->activate();
   } else {
-    m_brushDirectionGroup->hide();
-    m_BrushLineWidthSlider->hide();
+    m_brushDirectionGroup->deactivate();
+    m_BrushLineWidthSlider->deactivate();
   }
+
+  if (currentBrush == ImpBrush::c_pBrushes[BRUSH_SCATTERED_CIRCLES]
+      || currentBrush == ImpBrush::c_pBrushes[BRUSH_SCATTERED_LINES]
+      || currentBrush == ImpBrush::c_pBrushes[BRUSH_SCATTERED_POINTS]) {
+    m_scatterGroup->activate();
+  } else {
+    m_scatterGroup->deactivate();
+  }
+
+  m_brushDialog->redraw();
 }
 
 void ImpressionistUI::updateUndoRedoMenus() {

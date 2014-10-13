@@ -1,5 +1,3 @@
-#include <random>
-#include <time.h>
 #include "Scattered.h"
 
 

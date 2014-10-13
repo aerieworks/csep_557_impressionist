@@ -2,15 +2,16 @@
 
 void ScatteredPointBrush::ScatteredPointBrushStroke::paint(const Point source, const Point target) {
   const double size = settings->getSizeAsDouble();
-  for (int i = 0; i < 10; i++) {
-    const int xOffset = (int)Scattered::getRandomOffset(-size, size);
-    const int yOffset = (int)Scattered::getRandomOffset(-size, size);
+  const int count = (int)getRandomOffset(settings->getScatterMinCountAsInteger(), settings->getScatterMaxCountAsInteger());
+  for (int i = 0; i < count; i++) {
+    const int xOffset = (int)getRandomOffset(-size, size);
+    const int yOffset = (int)getRandomOffset(-size, size);
     PointBrushStroke::paint(Point(source.x + xOffset, source.y + yOffset), Point(target.x + xOffset, target.y + yOffset));
   }
 }
 
 void ScatteredPointBrush::ScatteredPointBrushStroke::resolveSettings(BrushSettings* settings, const Point source) const {
-  settings->setSize((int)(settings->getSizeAsDouble() / 4));
+  settings->setSize((int)getRandomOffset(settings->getScatterMinSizeAsDouble(), settings->getScatterMaxSizeAsDouble()));
   PointBrushStroke::resolveSettings(settings, source);
 }
 
