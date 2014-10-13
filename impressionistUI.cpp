@@ -639,7 +639,6 @@ ImpressionistUI::ImpressionistUI()
   // Add brush direction controls to the dialog
   m_brushDirectionGroup = new Fl_Group(10, 240, 370, 45, "Brush Direction");
   m_brushDirectionGroup->box(FL_ENGRAVED_FRAME);
-  m_brushDirectionGroup->when(FL_WHEN_CHANGED);
   m_directionModeChoice = new Fl_Choice(20, 250, 100, 25);
   m_directionModeChoice->user_data((void*)(this));
   m_directionModeChoice->menu(directionModeMenu);

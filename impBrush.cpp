@@ -14,7 +14,6 @@ int			ImpBrush::c_nBrushCount = 0;
 ImpBrush**	ImpBrush::c_pBrushes = NULL;
 
 ImpBrush::BrushStroke::~BrushStroke() {
-  Log::Debug << "Deleting stroke." << Log::end;
   for (BrushStrokePart* part : parts) {
     delete part;
   }
@@ -29,7 +28,6 @@ void ImpBrush::BrushStroke::paint(const Point source, const Point target) {
 void ImpBrush::BrushStroke::replay() {
   begin();
   for (BrushStrokePart* part : parts) {
-    Log::Debug << "Replaying: (" << part->target.x << ", " << part->target.y << ")" << Log::end;
     doPaint(part->settings, part->source, part->target);
   }
   end();

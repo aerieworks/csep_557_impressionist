@@ -1,6 +1,5 @@
 #include <string>
 #include "BrushSettings.h"
-#include "../Log.h"
 
 #define DEFAULT_LINE_WIDTH 1
 #define DEFAULT_OPACITY 255
@@ -28,8 +27,6 @@ BrushSettings::BrushSettings(const BrushSettings& settings)
     brushDirection(settings.brushDirection),
     directionMode(settings.directionMode) {
   setColor(settings.color);
-  Log::Debug << "Copied settings." << Log::end;
-  Log::printSettings(this);
 }
 
 ColorMode BrushSettings::getColorMode() const {

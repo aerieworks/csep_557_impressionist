@@ -4,7 +4,6 @@
 // The code maintaining the painting view of the input images
 //
 
-#include "Log.h"
 #include "impressionist.h"
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
@@ -127,7 +126,6 @@ void PaintView::draw() {
     restoreContent();
 #endif
 
-    Log::Debug << "Running action." << Log::end;
     m_shouldSave = m_actionToDo->doAction();
     if (m_shouldDeleteAction) {
       delete m_actionToDo;

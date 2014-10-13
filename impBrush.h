@@ -46,7 +46,6 @@ protected:
       : settings(settings), source(source), target(target) { }
 
     ~BrushStrokePart() {
-      Log::Debug << "Deleting stroke part." << Log::end;
       delete settings;
     }
 
