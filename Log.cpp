@@ -31,34 +31,3 @@ void Log::setThreshold(const char* thresholdName) {
   }
   setThreshold(newThreshold);
 }
-
-void Log::printPixels(const char* message, const Area* area, const GLubyte* content, const int channels) {
-  Info << message << " " << area->getWidth() << "x" << area->getHeight() << " at (" << area->getX() << ", " << area->getY() << ")"
-    << "\tPixels: " << area->getWidth() << "x" << area->getHeight() << "x" << channels << ":" << Log::end;
-
-  if (threshold >= LogLevel::Debug) {
-    Debug << std::hex << std::setfill('0');
-    for (int y = 0; y < area->getHeight(); y++) {
-      Debug << std::setw(2) << y << ": ";
-      for (int x = 0; x < area->getWidth(); x++) {
-        if (x > 0) {
-          Debug << ' ';
-        }
-        for (int color = 0; color < channels; color++) {
-          const int index = channels * (y * area->getWidth() + x) + color;
-          Debug << std::setw(2) << (unsigned int)content[channels * (y * area->getWidth() + x) + color];
-        }
-      }
-      Debug << Log::end;
-    }
-  }
-}
-
-void Log::printSettings(const BrushSettings* settings) {
-  const unsigned char* color = settings->getColor();
-  Debug << "Brush settings: size: " << settings->getSizeAsDouble() << "; opacity: " << settings->getOpacityAsDouble()
-    << "; Line width: " << settings->getLineWidthAsDouble() << "; direction: " << settings->getBrushDirectionMode()
-    << ", " << settings->getBrushDirectionAsDouble() << "; color: " << std::hex << std::setfill('0')
-    << std::setw(2) << (unsigned int)color[0] << std::setw(2) << (unsigned int)color[1]
-    << std::setw(2) << (unsigned int)color[2] << std::setw(2) << (unsigned int)color[3] << Log::end;
-}

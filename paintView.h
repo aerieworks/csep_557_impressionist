@@ -17,8 +17,6 @@
 #endif
 #include <stdlib.h>
 #include "actions/Action.h"
-#include "Area.h"
-#include "actions/BrushPaintAction.h"
 
 class ImpressionistDoc;
 

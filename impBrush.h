@@ -11,7 +11,6 @@
 
 #include <stdlib.h>
 #include <vector>
-#include "Area.h"
 #include "Log.h"
 #include "viewModels/BrushSettings.h"
 

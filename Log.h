@@ -4,7 +4,6 @@
 #include <iostream>
 #include <Windows.h>
 #include <gl/GL.h>
-#include "Area.h"
 #include "viewModels/BrushSettings.h"
 
 enum LogLevel {
@@ -55,8 +54,6 @@ private:
 public:
   static void setThreshold(const LogLevel threshold);
   static void setThreshold(const char* thresholdName);
-  static void printPixels(const char* message, const Area* area, const GLubyte* content, const int channels);
-  static void printSettings(const BrushSettings* settings);
 
   static LogStream Debug;
   static LogStream Info;

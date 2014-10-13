@@ -207,7 +207,6 @@
   <ItemGroup>
     <ClCompile Include="actions\BrushBeginAction.cpp" />
     <ClCompile Include="actions\BrushEndAction.cpp" />
-    <ClCompile Include="Area.cpp" />
     <ClCompile Include="actions\BrushMoveAction.cpp" />
     <ClCompile Include="actions\BrushPaintAction.cpp" />
     <ClCompile Include="KernelFilter.cpp" />
@@ -233,7 +232,6 @@
     <ClInclude Include="actions\Action.h" />
     <ClInclude Include="actions\BrushBeginAction.h" />
     <ClInclude Include="actions\BrushEndAction.h" />
-    <ClInclude Include="Area.h" />
     <ClInclude Include="actions\BrushAction.h" />
     <ClInclude Include="brushes.h" />
     <ClInclude Include="actions\BrushMoveAction.h" />
