@@ -6,9 +6,6 @@ public:
   Scattered();
 
 protected:
-  Point getScatteredTarget(const Point originalTarget) const;
-
-private:
-  int addRandomOffset(const int initialValue) const;
+  double getRandomOffset(const double min, const double max) const;
 };
 

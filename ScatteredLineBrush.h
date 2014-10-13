@@ -12,6 +12,7 @@ protected:
     ScatteredLineBrushStroke(ImpressionistDoc* const doc, const BrushSettings* settings)
       : LineBrushStroke(doc, settings), Scattered() {}
 
+    virtual void resolveSettings(BrushSettings* settings, const Point source) const;
     virtual void paint(const Point source, const Point target);
   };
 };

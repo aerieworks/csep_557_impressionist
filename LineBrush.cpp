@@ -26,7 +26,7 @@ void LineBrush::LineBrushStroke::doPaint(const BrushSettings* settings, const Po
   glMatrixMode(GL_MODELVIEW);
   glPushMatrix();
   glTranslated(target.x, target.y, 0);
-  glRotated(calculateDirection(source), 0, 0, 1);
+  glRotated(settings->getBrushDirectionAsDouble(), 0, 0, 1);
 
   glBegin(GL_LINES); {
     glColor4ubv(settings->getColor());
