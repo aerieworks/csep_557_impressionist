@@ -8,43 +8,23 @@
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
 #include "pointBrush.h"
+#include "Log.h"
 
 extern float frand();
 
-PointBrush::PointBrush(ImpressionistDoc* pDoc, char* name) :
-ImpBrush(pDoc, name) {
+void PointBrush::PointBrushStroke::begin() {
+  Log::Debug << "PointBrushStroke::begin" << Log::end;
+  glPointSize(settings->getSizeAsFloat());
 }
 
-Area* PointBrush::getModifiedArea(const Point brushLocation) {
-
-  const int pointSize = getSettings()->getSizeAsInteger();
-  const int offset = ceil(pointSize / 2) + 1;
-  const int x = max(0, brushLocation.x - offset);
-  const int y = max(0, brushLocation.y - offset);
-  return new Area(x, y, offset * 2, offset * 2);
+void PointBrush::PointBrushStroke::doPaint(const BrushSettings* settings, const Point source, const Point target) {
+  Log::printSettings(settings);
+  glBegin(GL_POINTS); {
+    glColor4ubv(settings->getColor());
+    glVertex2d(target.x, target.y);
+  } glEnd();
 }
 
-Area* PointBrush::brushBegin(const Point source, const Point target) {
-  glPointSize(getSettings()->getSizeAsFloat());
-  return brushMove(source, target);
+ImpBrush::BrushStroke* PointBrush::createStroke() {
+  return new PointBrush::PointBrushStroke(getDocument(), getSettings());
 }
-
-Area* PointBrush::brushMove(const Point source, const Point target) {
-  ImpressionistDoc* pDoc = getDocument();
-  ImpressionistUI* dlg = pDoc->m_pUI;
-
-  glBegin(GL_POINTS);
-  setColor(source);
-
-  glVertex2d(target.x, target.y);
-
-  glEnd();
-
-  return getModifiedArea(target);
-}
-
-Area* PointBrush::brushEnd(const Point source, const Point target) {
-  // Nothing to do.
-  return NULL;
-}
-

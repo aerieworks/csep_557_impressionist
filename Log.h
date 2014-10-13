@@ -1,9 +1,11 @@
 #pragma once
 
+#include <iomanip>
 #include <iostream>
 #include <Windows.h>
 #include <gl/GL.h>
 #include "Area.h"
+#include "viewModels/BrushSettings.h"
 
 enum LogLevel {
   Debug,
@@ -42,7 +44,7 @@ private:
     LogStream& operator<<(const LogSignal& signal) {
 
       if (this->threshold <= Log::threshold) {
-        std::cerr << std::endl;
+        std::cerr << std::dec << std::endl;
       }
       return *this;
     }
@@ -54,6 +56,7 @@ public:
   static void setThreshold(const LogLevel threshold);
   static void setThreshold(const char* thresholdName);
   static void printPixels(const char* message, const Area* area, const GLubyte* content, const int channels);
+  static void printSettings(const BrushSettings* settings);
 
   static LogStream Debug;
   static LogStream Info;

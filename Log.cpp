@@ -53,3 +53,12 @@ void Log::printPixels(const char* message, const Area* area, const GLubyte* cont
     }
   }
 }
+
+void Log::printSettings(const BrushSettings* settings) {
+  const unsigned char* color = settings->getColor();
+  Debug << "Brush settings: size: " << settings->getSizeAsDouble() << "; opacity: " << settings->getOpacityAsDouble()
+    << "; Line width: " << settings->getLineWidthAsDouble() << "; direction: " << settings->getBrushDirectionMode()
+    << ", " << settings->getBrushDirectionAsDouble() << "; color: " << std::hex << std::setfill('0')
+    << std::setw(2) << (unsigned int)color[0] << std::setw(2) << (unsigned int)color[1]
+    << std::setw(2) << (unsigned int)color[2] << std::setw(2) << (unsigned int)color[3] << Log::end;
+}

@@ -13,7 +13,7 @@
 #include "impressionist.h"
 #include "imageio.h"
 #include "KernelFilter.h"
-#include "UndoItem.h"
+#include "UndoableAction.h"
 
 class ImpressionistUI;
 
@@ -78,7 +78,7 @@ public:
   GLubyte* getOriginalPixel(const Point p);
 
   // Adds the item to the undo stack.
-  void addUndoItem(UndoItem* item);
+  void addUndoItem(UndoableAction* action);
   // Gets whether or not there is an action that can be undone.
   bool canUndo() const;
   // Gets whether or not there is an action that can be redone.
@@ -91,8 +91,8 @@ public:
 private:
   unsigned char* calculateLuminance(const unsigned char* source);
   char				m_imageName[256];
-  std::deque<UndoItem*>	m_undoStack;
-  std::stack<UndoItem*>	m_redoStack;
+  std::deque<UndoableAction*> m_undoStack;
+  std::stack<UndoableAction*> m_redoStack;
 };
 
 extern void MessageBox(char *message);

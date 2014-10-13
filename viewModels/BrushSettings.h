@@ -1,10 +1,17 @@
 #pragma once
+enum ColorMode {
+  FixedColor,
+  FromSource
+};
+
 enum DirectionMode {
-  Fixed,
+  FixedDirection,
   Gradient
 };
 
 class BrushSettings {
+  ColorMode colorMode;
+  unsigned char color[4];
 	double lineWidth;
 	double opacity;
 	int size;
@@ -13,6 +20,13 @@ class BrushSettings {
 
 public:
 	BrushSettings();
+  BrushSettings(const BrushSettings& settings);
+
+  ColorMode getColorMode() const;
+  void setColorMode(ColorMode mode);
+
+  const unsigned char* getColor() const;
+  void setColor(const unsigned char* color);
 
 	double getLineWidthAsDouble() const;
 	float getLineWidthAsFloat() const;

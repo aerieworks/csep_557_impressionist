@@ -42,7 +42,6 @@ void OriginalView::draw()
 		ortho();
 
 	}
-
 	glClear( GL_COLOR_BUFFER_BIT );
 
 	if ( m_pDoc->m_ucImage ) 

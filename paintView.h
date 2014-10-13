@@ -18,6 +18,7 @@
 #include <stdlib.h>
 #include "actions/Action.h"
 #include "Area.h"
+#include "actions/BrushPaintAction.h"
 
 class ImpressionistDoc;
 
@@ -32,6 +33,7 @@ public:
 
   void resizeWindow(int width, int height);
 
+  void flush();
   void saveCurrentContent();
 
   void restoreContent();
@@ -39,11 +41,11 @@ public:
   ImpressionistDoc *m_pDoc;
 
 private:
-  void addUndoFor(Area* invalidatedArea);
   void updateMousePosition();
 
   GLvoid* m_pPaintBitstart;
   Action* m_actionToDo;
+  ImpBrush::BrushStroke* m_brushStroke;
   int		m_nDrawWidth,
     m_nDrawHeight,
     m_nStartRow,

@@ -1,12 +1,11 @@
 #pragma once
 #include "Action.h"
 #include "../ImpBrush.h"
-class BrushAction :
-  public Action {
+class BrushAction : public Action {
 public:
-  BrushAction(ImpBrush* brush, const Point source, const Point target);
+  BrushAction(ImpBrush::BrushStroke* stroke, const Point source, const Point target) : stroke(stroke), source(source), target(target) {}
 protected:
-  ImpBrush* brush;
+  ImpBrush::BrushStroke* stroke;
   const Point source;
   const Point target;
 };

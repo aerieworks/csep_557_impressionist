@@ -3,7 +3,7 @@
 class BrushBeginAction :
   public BrushAction {
 public:
-  BrushBeginAction(ImpBrush* brush, const Point source, const Point target);
-  Area* doAction();
+  BrushBeginAction(ImpBrush::BrushStroke* stroke, const Point source, const Point target) : BrushAction(stroke, source, target) {}
+  bool doAction();
 };
 

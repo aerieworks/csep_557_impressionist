@@ -1,12 +1,10 @@
 #ifndef ACTION_H
 #define ACTION_H
 
-#include "../Area.h"
-
 class Action {
 public:
-  Action();
+  Action() {}
 
-  virtual Area* doAction() = 0;
+  virtual bool doAction() = 0;
 };
 #endif

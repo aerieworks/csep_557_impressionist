@@ -1,9 +1,8 @@
 #pragma once
 #include "BrushAction.h"
-class BrushMoveAction :
-  public BrushAction {
+class BrushMoveAction : public BrushAction {
 public:
-  BrushMoveAction(ImpBrush* brush, const Point source, const Point target);
-  Area* doAction();
+  BrushMoveAction(ImpBrush::BrushStroke* stroke, const Point source, const Point target) : BrushAction(stroke, source, target) {}
+  bool doAction();
 };
 

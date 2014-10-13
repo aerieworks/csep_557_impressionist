@@ -1,12 +1,10 @@
 #include "ScatteredLineBrush.h"
 
-
-ScatteredLineBrush::ScatteredLineBrush(ImpressionistDoc * pDoc, char * name)
-  : LineBrush(pDoc, name), Scattered() {
+void ScatteredLineBrush::ScatteredLineBrushStroke::paint(const Point source, const Point target) {
+  Point scatteredTarget = Scattered::getScatteredTarget(target);
+  LineBrushStroke::paint(source, scatteredTarget);
 }
 
-
-Area* ScatteredLineBrush::brushMove(const Point source, const Point target) {
-  Point scatteredTarget = Scattered::getScatteredTarget(target);
-  return LineBrush::brushMove(source, scatteredTarget);
+ImpBrush::BrushStroke* ScatteredLineBrush::createStroke() {
+  return new ScatteredLineBrush::ScatteredLineBrushStroke(getDocument(), getSettings());
 }

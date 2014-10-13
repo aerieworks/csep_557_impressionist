@@ -517,7 +517,7 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
 
     { "&Edit", 0, 0, 0, FL_SUBMENU },
     { "&Undo", FL_ALT + 'z', (Fl_Callback*)ImpressionistUI::cb_undo },
-    { "&Redo", FL_ALT + 'Z', (Fl_Callback*)ImpressionistUI::cb_redo },
+    { "&Redo", FL_ALT + 'y', (Fl_Callback*)ImpressionistUI::cb_redo },
     { 0 },
 
     { "&Help", 0, 0, 0, FL_SUBMENU },
@@ -540,7 +540,7 @@ Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE + 1] = {
 
 // Direction mode menu definition
 Fl_Menu_Item ImpressionistUI::directionModeMenu[3] = {
-    { "Fixed", FL_ALT + 'f', (Fl_Callback *)ImpressionistUI::cb_directionModeChoice, (void *)DirectionMode::Fixed },
+    { "Fixed", FL_ALT + 'f', (Fl_Callback *)ImpressionistUI::cb_directionModeChoice, (void *)DirectionMode::FixedDirection },
     { "Gradient", FL_ALT + 'g', (Fl_Callback *)ImpressionistUI::cb_directionModeChoice, (void *)DirectionMode::Gradient },
     { 0 }
 };
@@ -703,7 +703,7 @@ void ImpressionistUI::updateBrushControls() {
     || currentBrush == ImpBrush::c_pBrushes[BRUSH_SCATTERED_LINES]) {
     Log::Debug << "Updating brush settings." << Log::end;
     m_brushDirectionGroup->show();
-    if (getCurrentBrushSettings()->getBrushDirectionMode() == DirectionMode::Fixed) {
+    if (getCurrentBrushSettings()->getBrushDirectionMode() == DirectionMode::FixedDirection) {
       Log::Debug << "Should show direction slider for Fixed." << Log::end;
       m_BrushDirectionSlider->show();
     } else {

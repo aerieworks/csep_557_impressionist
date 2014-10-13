@@ -9,7 +9,7 @@
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
 #include "paintView.h"
-#include "UndoItem.h"
+#include "UndoableAction.h"
 #include "actions/BrushBeginAction.h"
 #include "actions/BrushEndAction.h"
 #include "actions/BrushMoveAction.h"
@@ -28,6 +28,8 @@
 #define max(a, b)	( ( (a)>(b) ) ? (a) : (b) )
 #endif
 
+static bool shouldSave = false;
+
 PaintView::PaintView(int			x,
   int			y,
   int			w,
@@ -37,6 +39,7 @@ PaintView::PaintView(int			x,
   m_nWindowWidth = w;
   m_nWindowHeight = h;
   m_actionToDo = NULL;
+  m_brushStroke = NULL;
 }
 
 
@@ -118,22 +121,20 @@ void PaintView::draw() {
 
 
 
+  shouldSave = false;
   if (m_pDoc->m_ucPainting && m_actionToDo) {
 #ifndef _WIN32
     restoreContent();
 #endif
 
-    Area* modifiedArea = m_actionToDo->doAction();
-    delete m_actionToDo;
+    Log::Debug << "Running action." << Log::end;
+    shouldSave = m_actionToDo->doAction();
     m_actionToDo = NULL;
 
 #ifndef _WIN32
     saveCurrentContent();
 #endif
 
-    if (modifiedArea != NULL) {
-      addUndoFor(modifiedArea);
-    }
   }
 
   glFlush();
@@ -145,6 +146,15 @@ void PaintView::draw() {
 #endif
 #endif // !MESA
 
+}
+
+void PaintView::flush() {
+  Fl_Gl_Window::flush();
+  if (shouldSave) {
+    saveCurrentContent();
+    restoreContent();
+    shouldSave = false;
+  }
 }
 
 void PaintView::updateMousePosition() {
@@ -161,6 +171,7 @@ void PaintView::updateMousePosition() {
   Point source(mousePos.x + scrollPos.x, endRow - mousePos.y);
   Point target(mousePos.x, windowHeight - mousePos.y);
   m_pDoc->m_pUI->setCursorPosition(source, target);
+
 }
 
 void PaintView::handleAction(Action* action) {
@@ -177,20 +188,19 @@ int PaintView::handle(int event) {
     break;
   case FL_PUSH:
     if (Fl::event_button() == 1) {
-      handleAction(new BrushBeginAction(m_pDoc->m_pCurrentBrush, m_pDoc->m_pUI->getSourcePosition(), m_pDoc->m_pUI->getTargetPosition()));
+      m_brushStroke = m_pDoc->m_pCurrentBrush->createStroke();
+      handleAction(new BrushBeginAction(m_brushStroke, m_pDoc->m_pUI->getSourcePosition(), m_pDoc->m_pUI->getTargetPosition()));
     }
     break;
   case FL_DRAG:
     updateMousePosition();
     if (Fl::event_button() == 1) {
-      handleAction(new BrushMoveAction(m_pDoc->m_pCurrentBrush, m_pDoc->m_pUI->getSourcePosition(), m_pDoc->m_pUI->getTargetPosition()));
+      handleAction(new BrushMoveAction(m_brushStroke, m_pDoc->m_pUI->getSourcePosition(), m_pDoc->m_pUI->getTargetPosition()));
     }
     break;
   case FL_RELEASE:
     if (Fl::event_button() == 1) {
-      handleAction(new BrushEndAction(m_pDoc->m_pCurrentBrush, m_pDoc->m_pUI->getSourcePosition(), m_pDoc->m_pUI->getTargetPosition()));
-      saveCurrentContent();
-      restoreContent();
+      handleAction(new BrushEndAction(m_pDoc, m_brushStroke, m_pDoc->m_pUI->getSourcePosition(), m_pDoc->m_pUI->getTargetPosition()));
     }
     break;
   default:
@@ -245,21 +255,4 @@ void PaintView::restoreContent() {
     m_pPaintBitstart);
 
   //	glDrawBuffer(GL_FRONT);
-}
-
-void PaintView::addUndoFor(Area* modifiedArea) {
-  glPixelStorei(GL_PACK_ROW_LENGTH, modifiedArea->getWidth());
-  glPixelStorei(GL_PACK_ALIGNMENT, 1);
-
-  GLubyte* before = new GLubyte[3 * modifiedArea->getWidth() * modifiedArea->getHeight()];
-  glReadBuffer(GL_FRONT);
-  glReadPixels(modifiedArea->getX(), modifiedArea->getY(), modifiedArea->getWidth(), modifiedArea->getHeight(), GL_RGB, GL_UNSIGNED_BYTE, (void*)before);
-  //Log::PrintPixels("Before for undo", modifiedArea, before, 3);
-
-  GLubyte* after = new GLubyte[3 * modifiedArea->getWidth() * modifiedArea->getHeight()];
-  glReadBuffer(GL_BACK);
-  glReadPixels(modifiedArea->getX(), modifiedArea->getY(), modifiedArea->getWidth(), modifiedArea->getHeight(), GL_RGB, GL_UNSIGNED_BYTE, (void*)after);
-  //Log::PrintPixels("After for redo", modifiedArea, after, 3);
-
-  m_pDoc->addUndoItem(new UndoItem("Brush", modifiedArea, before, after));
 }

@@ -11,14 +11,18 @@
 
 class PointBrush : public ImpBrush {
 public:
-  PointBrush(ImpressionistDoc* pDoc = NULL, char* name = NULL);
+  PointBrush(ImpressionistDoc* pDoc = NULL, char* name = NULL) : ImpBrush(pDoc, name) {}
 
-  Area* brushBegin(const Point source, const Point target);
-  Area* brushMove(const Point source, const Point target);
-  Area* brushEnd(const Point source, const Point target);
-  char* getBrushName(void);
-private:
-  Area* getModifiedArea(const Point target);
+  virtual BrushStroke* createStroke();
+protected:
+  class PointBrushStroke : public ImpBrush::BrushStroke {
+  public:
+    PointBrushStroke(ImpressionistDoc* const doc, const BrushSettings* settings) : BrushStroke(doc, settings) {}
+      
+    virtual void begin();
+  protected:
+    virtual void doPaint(const BrushSettings* settings, const Point source, const Point target);
+  };
 };
 
 #endif

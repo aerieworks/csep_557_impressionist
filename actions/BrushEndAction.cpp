@@ -1,10 +1,9 @@
 #include "BrushEndAction.h"
+#include "BrushPaintAction.h"
 
 
-BrushEndAction::BrushEndAction(ImpBrush* brush, const Point source, const Point target)
-  : BrushAction(brush, source, target) {
-}
-
-Area* BrushEndAction::doAction() {
-  return brush->brushEnd(source, target);
+bool BrushEndAction::doAction() {
+  stroke->end();
+  doc->addUndoItem(new BrushPaintAction(doc->m_ucPainting, doc->m_nPaintWidth, doc->m_nPaintHeight, stroke));
+  return true;
 }

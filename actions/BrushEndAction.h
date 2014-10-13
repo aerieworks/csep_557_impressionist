@@ -1,9 +1,14 @@
 #pragma once
 #include "BrushAction.h"
-class BrushEndAction :
-  public BrushAction {
+#include "../impressionistDoc.h"
+
+class BrushEndAction : public BrushAction {
 public:
-  BrushEndAction(ImpBrush* brush, const Point source, const Point target);
-  Area* doAction();
+  BrushEndAction(ImpressionistDoc* doc, ImpBrush::BrushStroke* stroke, const Point source, const Point target)
+    : BrushAction(stroke, source, target), doc(doc) {}
+
+  bool doAction();
+private:
+  ImpressionistDoc* doc;
 };
 

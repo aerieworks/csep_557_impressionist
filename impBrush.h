@@ -10,6 +10,7 @@
 //
 
 #include <stdlib.h>
+#include <vector>
 #include "Area.h"
 #include "viewModels/BrushSettings.h"
 
@@ -39,14 +40,40 @@ class ImpBrush {
 protected:
   ImpBrush(ImpressionistDoc* pDoc = NULL, char* name = NULL);
 
-public:
-  // The implementation of your brush should realize these virtual functions
-  virtual Area* brushBegin(const Point source, const Point target) = 0;
-  virtual Area* brushMove(const Point source, const Point target) = 0;
-  virtual Area* brushEnd(const Point source, const Point target) = 0;
+  struct BrushStrokePart {
+    BrushStrokePart(BrushSettings* settings, const Point source, const Point target)
+      : settings(settings), source(source), target(target) { }
 
-  // according to the source image and the position, determine the draw color
-  void setColor(const Point source);
+    ~BrushStrokePart() {
+      delete settings;
+    }
+
+    BrushSettings* settings;
+    const Point source;
+    const Point target;
+  };
+public:
+  class BrushStroke {
+  public: 
+    BrushStroke(ImpressionistDoc* const doc, const BrushSettings* settings) : doc(doc), settings(settings) {}
+    ~BrushStroke();
+
+    virtual void begin() = 0;
+    virtual void paint(const Point source, const Point target);
+    virtual void end() {}
+    virtual void replay();
+  protected:
+    void addPart(BrushSettings* settings, const Point source, const Point target);
+    virtual void resolveSettings(BrushSettings* settings, const Point source) const;
+    virtual void doPaint(const BrushSettings* settings, const Point source, const Point target) = 0;
+
+    const BrushSettings* settings;
+    ImpressionistDoc* const doc;
+  private:
+    std::vector<BrushStrokePart*> parts;
+  };
+
+  virtual BrushStroke* createStroke() = 0;
 
   // get Doc to communicate with it
   ImpressionistDoc* getDocument(void);

@@ -19,7 +19,7 @@ KernelFilter::KernelFilter(const int width, const int height)
   kernel[(kernelHeight / 2 * kernelWidth) + kernelWidth / 2] = 1;
 }
 
-KernelFilter::KernelFilter(const int width, const int height, double* kernel, double divisor, double offset)
+KernelFilter::KernelFilter(const int width, const int height, const double* kernel, double divisor, double offset)
   : KernelFilter(width, height) {
   this->divisor = divisor;
   this->offset = offset;

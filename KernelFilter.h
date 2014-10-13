@@ -3,7 +3,7 @@ class KernelFilter
 {
 public:
 	KernelFilter(const int width, const int height);
-  KernelFilter(const int width, const int height, double* kernel, double divisor, double offset);
+  KernelFilter(const int width, const int height, const double* kernel, double divisor, double offset);
 	~KernelFilter();
 
 	void apply(const unsigned char* source, unsigned char* dest, const int width, const int height) const;

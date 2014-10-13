@@ -1,11 +1,11 @@
 #include "impressionistDoc.h"
 #include "ScatteredCircleBrush.h"
 
-ScatteredCircleBrush::ScatteredCircleBrush(ImpressionistDoc * pDoc, char * name)
-  : CircleBrush(pDoc, name), Scattered() {
+void ScatteredCircleBrush::ScatteredCircleBrushStroke::paint(const Point source, const Point target) {
+  Point scatteredTarget = Scattered::getScatteredTarget(target);
+  CircleBrushStroke::paint(source, scatteredTarget);
 }
 
-Area* ScatteredCircleBrush::brushMove(const Point source, const Point target) {
-  Point scatteredTarget = Scattered::getScatteredTarget(target);
-  return CircleBrush::brushMove(source, scatteredTarget);
+ImpBrush::BrushStroke* ScatteredCircleBrush::createStroke() {
+  return new ScatteredCircleBrush::ScatteredCircleBrushStroke(getDocument(), getSettings());
 }

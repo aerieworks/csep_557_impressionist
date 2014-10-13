@@ -7,10 +7,47 @@
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
 #include "impBrush.h"
+#include "Log.h"
 
 // Static class member initializations
 int			ImpBrush::c_nBrushCount = 0;
 ImpBrush**	ImpBrush::c_pBrushes = NULL;
+
+ImpBrush::BrushStroke::~BrushStroke() {
+  for (BrushStrokePart* part : parts) {
+    delete part;
+  }
+}
+
+void ImpBrush::BrushStroke::paint(const Point source, const Point target) {
+  BrushSettings* settingsCopy = new BrushSettings(*settings);
+  resolveSettings(settingsCopy, source);
+  addPart(settingsCopy, source, target);
+}
+
+void ImpBrush::BrushStroke::replay() {
+  begin();
+  for (BrushStrokePart* part : parts) {
+    Log::Debug << "Replaying: (" << part->target.x << ", " << part->target.y << ")" << Log::end;
+    doPaint(part->settings, part->source, part->target);
+  }
+  end();
+}
+
+void ImpBrush::BrushStroke::resolveSettings(BrushSettings* settings, const Point source) const {
+  if (settings->getColorMode() == ColorMode::FromSource) {
+    unsigned char color[4];
+    memcpy(color, doc->getOriginalPixel(source), 3);
+    color[3] = settings->getOpacityAsChar();
+    settings->setColor(color);
+    settings->setColorMode(ColorMode::FixedColor);
+  }
+}
+
+void ImpBrush::BrushStroke::addPart(BrushSettings* settings, const Point source, const Point target) {
+  parts.push_back(new ImpBrush::BrushStrokePart(settings, source, target));
+  doPaint(settings, source, target);
+}
 
 ImpBrush::ImpBrush(ImpressionistDoc*	pDoc,
   char*				name) :
@@ -39,21 +76,4 @@ char* ImpBrush::getBrushName(void) {
 //----------------------------------------------------
 BrushSettings* ImpBrush::getSettings() {
   return &m_settings;
-}
-
-//----------------------------------------------------
-// Set the color to paint with to the color at source,
-// which is the coord at the original window to sample 
-// the color from
-//----------------------------------------------------
-void ImpBrush::setColor(const Point source) {
-  ImpressionistDoc* pDoc = getDocument();
-
-
-  GLubyte color[4];
-
-  memcpy(color, pDoc->getOriginalPixel(source), 3);
-  color[3] = getSettings()->getOpacityAsChar();
-  glColor4ubv(color);
-
 }

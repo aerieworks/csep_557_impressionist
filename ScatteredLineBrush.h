@@ -1,11 +1,18 @@
 #pragma once
 #include "LineBrush.h"
 #include "Scattered.h"
-class ScatteredLineBrush :
-  public LineBrush, Scattered {
+class ScatteredLineBrush : public LineBrush {
 public:
-  ScatteredLineBrush(ImpressionistDoc * pDoc = NULL, char * name = NULL);
+  ScatteredLineBrush(ImpressionistDoc * pDoc = NULL, char * name = NULL) : LineBrush(pDoc, name) {}
 
-  Area* brushMove(const Point source, const Point target);
+  virtual BrushStroke* createStroke();
+protected:
+  class ScatteredLineBrushStroke : public LineBrush::LineBrushStroke, Scattered {
+  public:
+    ScatteredLineBrushStroke(ImpressionistDoc* const doc, const BrushSettings* settings)
+      : LineBrushStroke(doc, settings), Scattered() {}
+
+    virtual void paint(const Point source, const Point target);
+  };
 };
 

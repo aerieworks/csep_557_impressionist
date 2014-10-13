@@ -1,6 +1,6 @@
 #include "BrushAction.h"
 
 
-BrushAction::BrushAction(ImpBrush* brush, const Point source, const Point target)
-  : brush(brush), source(source), target(target) {
+BrushAction::BrushAction(ImpBrush::BrushStroke* stroke, const Point source, const Point target)
+  : stroke(stroke), source(source), target(target) {
 }
